@@ -1,0 +1,50 @@
+Package: MPAC
+Title: Integrated Multi-genomics To Analyze Cancer Sample Pathway Alterations
+Version: 0.0.1
+Authors@R: c(
+    person(given="Peng",    family="Liu", email="pliu55.wisc@gmail.com", 
+           role = c("aut", "cre")),
+    person(given="Paul",    family="Ahlquist", role = c("aut")),
+    person(given="Anthony", family="Gitter",   role = c("aut")),
+    person(given="Irene",   family="Ong",      role = c("aut")))
+Description: Multi-omic Pathway Analysis of Cancer (MPAC), to integrate 
+    multi-omics data for understanding cancer mechanisms. It improves upon 
+    PARADIGM and predicts novel patient groups with distinct pathway profiles 
+    as well as identifying key pathway proteins with potential clinical 
+    associations. From CNA and RNA-seq data, it determines genes’ DNA and RNA
+    states (i.e., repressed, normal, or activated), which serve as the input 
+    for PARADIGM to calculate Inferred Pathway Level (IPL). It also permutes
+    DNA and RNA states to create background distribution to filter IPL as a 
+    way to remove events observed by chance. It provides multiple methods for
+    downstream analysis and visualization.
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Depends: R (>= 4.1)
+Imports: 
+    data.table (>= 1.14.2),
+    magrittr (>= 2.0.2),
+    BiocParallel (>= 1.28.3),
+    fitdistrplus (>= 1.1),
+    igraph (>= 1.2.11),
+    BiocSingular (>= 1.10.0),
+    S4Vectors (>= 0.32.3),
+    SingleCellExperiment (>= 1.16.0),
+    SummarizedExperiment (>= 1.24.0),
+    bluster (>= 1.4.0),
+    fgsea (>= 1.20.0),
+    scran (>= 1.22.1),
+    stats,
+    utils
+Suggests: 
+    rmarkdown,
+    knitr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+biocViews: Software, Technology, Sequencing, RNASeq, Survival, Clustering, 
+    ImmunoOncology
+SystemsRequirements: runPrd() functions require external software PARADIGM. For
+    details, please see the 'Required external software' section in vignette's
+    'Run PARADIGM: runPrd()'.

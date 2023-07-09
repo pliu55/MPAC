@@ -1,0 +1,58 @@
+complex	CD28/CD86_(complex)
+complex	CD28_B7-2_(complex)
+complex	CD28_bound_to_B7_ligands_(complex)
+complex	CD28_homodimer_(complex)
+complex	CD3Z_homodimer_(complex)
+complex	CD3_zeta_dimer_with_phosphorylated_ITAMs_(complex)
+complex	CTLA-4/CD86_(complex)
+complex	Cytokine_receptor/JAKs/TYK2_(complex)
+complex	FASLG_(trimer)_(complex)
+complex	IL-12/IL-12R_(complex)
+complex	IL12Rbeta1/TYK2_(complex)
+complex	LAT/PLCgamma1/GRB2/SLP76/GADs_(complex)
+complex	NFAT1/JUN/FOS_(complex)
+complex	NTAL/PLCgamma1/GRB2/SLP76/GADs_(complex)
+complex	Nef_CD28_Complex_(complex)
+complex	PP2A_CTLA4_B7-1/B7-2_(complex)
+complex	Phospho_CD28_homodimer_(complex)
+complex	TCRz/NEF_(complex)
+complex	p-SLP-76_VAV_(complex)
+complex	phospho_CTLA4_B7-1/B7-2_(complex)
+complex	phosphorylated_SLP-76_Gads__LAT_(complex)
+family	Activated_JAK1__JAK2__TYK2_(family)
+family	JAK1__JAK2__TYK2_(family)
+protein	CD247
+protein	CD28
+protein	CD86
+protein	FASLG
+protein	IL12RB1
+protein	LCP2
+protein	TYK2
+NFAT1/JUN/FOS_(complex)	FASLG	-t>
+TCRz/NEF_(complex)	FASLG	-t>
+CD247	CD3Z_homodimer_(complex)	component>
+CD247	CD3_zeta_dimer_with_phosphorylated_ITAMs_(complex)	component>
+CD247	TCRz/NEF_(complex)	component>
+CD28	CD28/CD86_(complex)	component>
+CD28	CD28_homodimer_(complex)	component>
+CD28	Nef_CD28_Complex_(complex)	component>
+CD28	Phospho_CD28_homodimer_(complex)	component>
+CD28_homodimer_(complex)	CD28_B7-2_(complex)	component>
+CD28_homodimer_(complex)	CD28_bound_to_B7_ligands_(complex)	component>
+CD86	CD28/CD86_(complex)	component>
+CD86	CD28_B7-2_(complex)	component>
+CD86	CD28_bound_to_B7_ligands_(complex)	component>
+CD86	CTLA-4/CD86_(complex)	component>
+CD86	PP2A_CTLA4_B7-1/B7-2_(complex)	component>
+CD86	phospho_CTLA4_B7-1/B7-2_(complex)	component>
+FASLG	FASLG_(trimer)_(complex)	component>
+IL12RB1	IL-12/IL-12R_(complex)	component>
+IL12RB1	IL12Rbeta1/TYK2_(complex)	component>
+LCP2	LAT/PLCgamma1/GRB2/SLP76/GADs_(complex)	component>
+LCP2	NTAL/PLCgamma1/GRB2/SLP76/GADs_(complex)	component>
+LCP2	p-SLP-76_VAV_(complex)	component>
+LCP2	phosphorylated_SLP-76_Gads__LAT_(complex)	component>
+TYK2	Cytokine_receptor/JAKs/TYK2_(complex)	component>
+TYK2	IL12Rbeta1/TYK2_(complex)	component>
+TYK2	Activated_JAK1__JAK2__TYK2_(family)	member>
+TYK2	JAK1__JAK2__TYK2_(family)	member>

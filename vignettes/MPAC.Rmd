@@ -1,0 +1,383 @@
+---
+title: 'MPAC: Multi-omic Pathway Analysis of Cancer'
+author: 'Peng Liu, Paul Ahlquist, Anthony Gitter, and Irene Ong'
+date: '`r Sys.Date()`'
+output:
+    # rmarkdown::html_vignette:
+    #     toc: true
+    #     dev: svglite
+
+    bookdown::html_document2:
+        toc: true
+        fig_caption: yes
+        dev: svglite
+        toc_float: true
+
+    # BiocStyle::html_document:
+    #     toc: true
+    #     toc_depth: 2
+    #     fig_caption: yes
+    #     dev: svglite
+    #     toc_float: true
+urlcolor: blue
+linkcolor: blue
+vignette: >
+    %\VignetteIndexEntry{MPAC: Multi-omic Pathway Analysis of Cancer}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set( cache = TRUE, collapse = TRUE, echo = TRUE,
+    message = FALSE, warning = FALSE, fig.align = 'center',
+    dev.args=list(fix_text_size=FALSE ), comment = "#>")
+
+options( htmltools.dir.version = FALSE, formatR.indent = 2,
+    width = 55, digits = 4, warnPartialMatchAttr = FALSE,
+    warnPartialMatchDollar = FALSE, tinytex.verbose=TRUE)
+
+require(data.table)
+require(magrittr)
+
+require(MPAC)
+```
+
+# Introduction
+
+```{r, fig.cap='MPAC workflow', out.width='700px', echo=FALSE}
+knitr::include_graphics('workflow.jpg')
+```
+
+# Installation
+
+## From GitHub
+
+Start R and enter:
+
+```{r installFromGitHub, eval=FALSE}
+devtools::install_github('pliu55/MPAC')
+```
+
+## From Bioconductor
+
+Start R and enter:
+
+```{r installFromBioconductor, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("MPAC")
+```
+
+For different versions of R, please refer to the appropriate
+[Bioconductor release](https://bioconductor.org/about/release-announcements/).
+
+
+# Preparing input
+
+## Requirements
+
+`r focal_url=paste0('https://docs.gdc.cancer.gov/Data/',
+    'Bioinformatics_Pipelines/CNV_Pipeline/#data-processing-steps_2')`
+
+MPAC accepts two types of genomic data: 
+
+- copy-number alteration (CNA): recommend to use data from
+    [focal-level](`r focal_url`).
+- RNA-seq: both tumor and normal sample data are required. Recommend to use 
+    normalized gene expression data, e.g. FPKM.
+
+## Real data
+
+This section describes preparing PARADIGM input using data from real samples,
+which can be downloaded from TCGA or taken from sequencing experiments.
+
+### Copy-number alteration
+
+```{r ppCnInp}
+# a matrix of CN focal data with rows as genes and columns as samples
+cn_tumor_mat = system.file('extdata/TcgaInp/focal_tumor.rds',
+                            package='MPAC') %>% readRDS()
+
+# to return a matrix of CN state for running PARADIGM
+# activated, normal, or repressed state is represented by 1, 0, or -1
+ppCnInp(cn_tumor_mat) %>% .[1:4, 1:3]
+```
+
+### RNA-seq
+
+Note that data from normal samples are required here to evaluate if a gene
+in tumor samples has activated, repressed, or normal states.
+
+```{r ppRnaInp}
+# a matrix of RNA-seq data with rows as genes and columns as tumor samples
+rna_tumor_mat = system.file('extdata/TcgaInp/log10fpkmP1_tumor.rds',
+                            package='MPAC') %>% readRDS()
+
+# a matrix of RNA-seq data with rows as genes and columns as normal samples
+rna_norm_mat  = system.file('extdata/TcgaInp/log10fpkmP1_normal.rds',
+                            package='MPAC') %>% readRDS()
+
+# to return a matrix of RNA state for running PARADIGM
+# activated, normal, or repressed state is represented by 1, 0, or -1
+ppRnaInp(rna_tumor_mat, rna_norm_mat, threads=2) %>% .[1:4, 1:3]
+```
+
+
+## Permuted data
+
+Pathway activities from permuted data will be used to build a background 
+distribution to filter those from real data. The idea is to remove those that
+could be observed by chance. Permuted data were from real CN and RNA data as 
+shown in the example below.
+
+```{r ppPermInp}
+# CN state from real samples. It should be the output from `ppCnInp()` above.
+real_cn_mat  = system.file('extdata/TcgaInp/inp_focal.rds',
+                            package='MPAC') %>% readRDS()
+
+# RNA state from real samples. It should be the output from `ppRnaInp()` above.
+real_rna_mat = system.file('extdata/TcgaInp/inp_log10fpkmP1.rds',
+                            package='MPAC') %>% readRDS()
+
+# to return a list of list
+permll = ppPermInp(real_cn_mat, real_rna_mat, n_perms=3)
+
+# three objects under the first level
+length(permll)
+
+# object names
+names(permll[[1]])
+
+# permutation index
+permll[[1]]$iperm
+
+# permuted CN  state matrix, same format as the one from `ppCnInp()`
+permll[[1]] %$% CN  %>% .[1:4, 1:3]
+
+# permuted RNA state matrix, same format as the one from `ppRnaInp()`
+permll[[1]] %$% RNA %>% .[1:4, 1:3]
+```
+
+
+# Inferred pathway levels (IPLs)
+
+## PARADIGM binary
+
+```{r, echo=FALSE}
+prd_paper_url=paste0('https://academic.oup.com/bioinformatics/article/',
+    '26/12/i237/282591')
+prd_exe_url = paste0('https://github.com/sng87/paradigm-scripts/tree/',
+    'master/public/exe/')
+prd_linux_url= paste0(prd_exe_url, 'LINUX')
+prd_macos_url= paste0(prd_exe_url, 'MACOSX')
+```
+
+MPAC used PARADIGM developed by [Vaske et al.](`r prd_paper_url`) to predict
+pathway levels. PARADIGM Binary is available to download at Github for 
+[Linux](`r prd_linux_url`) and [MacOS](`r prd_macos_url`).
+
+## IPLs from real data
+
+Example below shows input and output files for running PARADIGM on data from
+real samples.
+
+PARADIGM will generate multiple output files. All the file name will start with
+the sample ID and a suffix indicating their types:
+
+- Inferred pathway levles (IPLs): file with a suffix `ipl.txt`
+- Output log: file with a suffix `run.out`
+- Error log: file with a suffix `run.err`
+- Othe auxiliary files, which can be skipped under common usage
+
+```{r runRealPrd}
+# CN state matrix from `ppCnInp()`
+cn_state_mat  = system.file('extdata/TcgaInp/inp_focal.rds',       
+                            package='MPAC') %>% readRDS()
+
+# RNA state matrix from `ppRnaInp()`
+rna_state_mat = system.file('extdata/TcgaInp/inp_log10fpkmP1.rds', 
+                            package='MPAC') %>% readRDS()
+
+# Pathway file
+fpth = system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
+
+# folder to save all the output files
+outdir = tempdir()
+
+# PARADIGM binary location. Replace the one below with a true location.
+paradigm_bin = '/path/to/PARADIGM'
+
+## code below depends on external PARADIGM binary, not to run in this vignette.
+# runPrd(cn_state_mat, rna_state_mat, fpth, outdir, paradigm_bin, 
+#    sampleids=c('TCGA-CF-7100'))
+```
+
+## PARADIGM on permuted data
+
+For permuted input, PARADIGM will generate output in the same fashion as on
+real data above, except that one permutation corresponds to one output folder
+named as `p$(index)`, where `$index` is the index of that permutation. For 
+example, runs on three permutations will generate folders as `p1`, `p2`, and 
+`p3`.
+
+```{r runPermPrd}
+# a list of list from `ppPermInp()`
+permll =system.file('extdata/TcgaInp/inp_perm.rds', package='MPAC') %>%
+        readRDS()
+
+# Pathway file
+fpth = system.file('extdata/Pth/tiny_pth.txt',     package='MPAC')
+
+# folder to save all the output files
+outdir = tempdir()
+
+# PARADIGM binary location. Replace the one below with a true location.
+paradigm_bin = '/path/to/PARADIGM'
+
+# (optional) sample IDs to run PARADIGM on
+pat = 'TCGA-CV-7100'
+
+## code below depends on external PARADIGM binary, not to run in this vignette.
+# runPermPrd(permll, fpth, outdir, paradigm_bin, sampleids=c(pat))
+```
+
+
+# Collecting IPLs
+
+MPAC has PARADIGM run on individual sample in parallel to speed up calculation.
+For the convenience of downstream analysis, PARADIGM results will be collected
+and put together for all samples. 
+
+## From PARADIGM on real data
+
+```{r colRealIPL}
+# the folder saving PARADIGM result on real data
+# it should be the `outdir` folder from `runPrd()`
+indir = system.file('/extdata/runPrd/', package='MPAC')
+
+# to return a data.table with columns as entities and IPLs for each sample
+colRealIPL(indir) %>% head()
+```
+
+## From PARADIGM on permuted data
+
+```{r colPermIPL}
+# the folder saving PARADIGM result on permuted data
+# it should be the `outdir` folder from `runPermPrd()`
+indir = system.file('/extdata/runPrd/', package='MPAC')
+
+# number of permutated dataset results to collect
+n_perms = 3
+
+# return a data.table with columns as entities, permutation index, and IPLs for
+# each sample
+colPermIPL(indir, n_perms) %>% head()
+```
+
+
+# Filtering IPLs
+
+MPAC uses PARADIGM runs on permuted data to generate a background distribution
+of IPLs. This distribution is used to filter IPLs from real data to remove
+those could be observed by chance. 
+
+```{r fltByPerm}
+# collected real IPLs. It is the output from `colRealIPL()`
+realdt = system.file('extdata/fltByPerm/real.rds', package='MPAC') %>% readRDS()
+
+# collected permutation IPLs. It is the output from `colPermIPL()`
+permdt = system.file('extdata/fltByPerm/perm.rds', package='MPAC') %>% readRDS()
+
+# to return a matrix of filtered IPLs with rows as pathway entities and columns
+# as samples. Entities with IPLs observed by chance are set to NA.
+fltByPerm(realdt, permdt) %>% head()
+```
+
+# Find the largest sub-pathway
+
+MPAC decomposes the original pathway and identify the largest sub-pathway with
+all of its entities having filtered IPLs. This sub-pathway allows user to focus
+on the most altered pathway network. Note that, because the set of entities 
+having filtered IPLs are often different between samples, the sub-pathway will 
+largely be different between samples as well and represent sample-specific
+features.
+
+```{r subNtw}
+# a matrix generated by `fltByPerm()`
+fltmat = system.file('extdata/fltByPerm/flt_real.rds', package='MPAC') %>%
+        readRDS()
+
+# a pathway file
+fpth = system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
+
+# a gene set file in MSigDB's GMT format. It should be the same file that will
+# be used in the over-representation analysis below.
+fgmt = system.file('extdata/ovrGMT/fake.gmt', package='MPAC')
+
+# to return a list of igraph objects representing the larget sub-pathway for
+# each sample
+subNtw(fltmat, fpth, fgmt, min_n_gmt_gns=1)
+```
+
+# Gene set over-representation
+
+To understand the biological functions of a sample's largest sub-pathway, MPAC
+performs gene set over-represetation analysis on gene with non-zero IPLs in 
+the sub-pathway. 
+
+```{r ovrGMT}
+# a list of igraph objects from `subNtw()`
+subntwl = system.file('extdata/subNtw/subntwl.rds', package='MPAC') %>%readRDS()
+
+# a gene set file that has been used in `subNtw()`
+fgmt = system.file('extdata/ovrGMT/fake.gmt',       package='MPAC')
+
+# (optional) genes that have CN and RNA data in the input files for PARADIGM
+omic_gns =  system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC') %>%
+            readRDS() %>% rownames()
+
+# to return a matrix of over-representation adjusted p-values with rows as gene
+# set and columns as samples
+ovrGMT(subntwl, fgmt, omic_gns)
+```
+
+# Cluster samples by pathway over-representation
+
+With gene set over-representation adjusted p-values, MPAC can cluster samples
+as a way to investigate shared features between samples in the same cluster.
+
+```{r clSamp}
+# a matrix of gene set over-representation adjusted p-values from `ovrGMT()`
+ovrmat = system.file('extdata/clSamp/ovrmat.rds', package='MPAC') %>% readRDS()
+
+# to return a matrix of clustering results with rows as samples and a column
+# of cluster index
+clSamp(ovrmat) %>% head()
+```
+
+# Find consensus pathway motifs within a cluster
+
+From the clustering results, MPAC can find consensus pathway motifs from samples
+within the same clusters. These motifs will represent cluster-specific pathway
+features. They often contain key proteins for further analysis.
+
+```{r conMtf}
+# a list of igraph objects from `subNtw()`
+subntwl = system.file('extdata/conMtf/subntwl.rds', package='MPAC') %>%readRDS()
+
+# (optional) genes that have CN and RNA data in the input files for PARADIGM
+omic_gns = system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC') %>%
+            readRDS() %>% rownames()
+
+# to return a list of igraph objects representing consensus motifs
+conMtf(subntwl, omic_gns, min_mtf_n_nodes=50)
+```
+
+# Session Info
+
+Below is the output of `sessionInfo()` on the system on which this document
+was compiled.
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```
