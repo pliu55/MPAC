@@ -2,7 +2,7 @@
 ![bioc](http://www.bioconductor.org/shields/years-in-bioc/MPAC.svg)](http://bioconductor.org/packages/devel/bioc/html/MPAC.html)
 -->
 
-MPAC: Inferring Cancer Pathway Activities from Multi-omic data
+MPAC: inferring cancer pathway activities from multi-omic data
 ===========================================
 
 Table of Contents
@@ -10,8 +10,8 @@ Table of Contents
 
 * [Introduction](#Introduction)
 * [Installation](#Installation)
-* [Reference](#Reference)
 * [Shiny App](#ShinyApp)
+* [Reference](#Reference)
 * [Contact](#Contact)
 * [License](#License)
 
@@ -21,12 +21,12 @@ Table of Contents
 
 Multi-omic Pathway Analysis of Cancer (__MPAC__) is an __R__ package that 
 interprets multi-omic data through the prior knowledge of biological pathways.
-The workflow of MPAC contains several steps, which is shown in 
-the figure below with function names and associated key parameters.  PRAM has a
+The workflow of MPAC contains several steps, which are shown in 
+the figure below.  MPAC has a
 [vignette TO UPDATE!!](https://bioconductor.org/packages/devel/bioc/vignettes/pram/inst/doc/pram.pdf) that describes each function in details.
 
 <p align='center'>
-    <img src="vignettes/workflow.jpg" width="700">
+    <img src="vignettes/workflow.jpg" width="800">
 </p>
 
 ## <a name='Installation'></a> Installation
@@ -36,7 +36,7 @@ the figure below with function names and associated key parameters.  PRAM has a
 Start __R__ and enter: 
 
 ```r
-devtools::install_github('pliu55/MAPC')
+devtools::install_github('pliu55/MPAC')
 ```
 
 ### From Bioconductor
@@ -57,9 +57,9 @@ __MAPC: a computational framework for inferring cancer pathway activities from m
 
 ## <a name="ShinyApp"></a> Shiny App
 
-To explore key results reported in the MAPC manuscript as well as associated
-results please check out 
-[an R Shiny app](https://github.com/pliu55/MPAC_Shiny).
+To explore key results reported in the MPAC manuscript as well as associated
+results please check out
+[this R Shiny app](https://github.com/pliu55/MPAC_Shiny).
 
 
 ## <a name="Contact"></a> Contact
@@ -68,4 +68,4 @@ Got a question? Please report it at the [issues tab](https://github.com/pliu55/M
 
 ## <a name="License"></a> License
 
-PRAM is licensed under the [GNU General Public License v3](LICENSE).
+PRAM is licensed under the [GNU General Public License v3](LICENSE.md).
