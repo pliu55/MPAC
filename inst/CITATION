@@ -1,13 +1,13 @@
 citEntry(
     entry  = "article",
-    title  = "PRAM: a novel pooling approach for discovering intergenic transcripts from large-scale RNA sequencing experiments",
+    title  = "MPAC: a computational framework for inferring cancer pathway activities from multi-omic data",
     author = personList( as.person("Peng Liu"),
-                         as.person("Alexandra A. Soukup"),
-                         as.person("Emery H. Bresnick"),
-                         as.person("Colin N. Dewey"),
-                         as.person("Sündüz Keleş") ),
-    year    = 2019,
+                         as.person("David Page"),
+                         as.person("Paul Ahlquist"),
+                         as.person("Irene M. Ong"),
+                         as.person("Anthony Gitter") ),
+    year    = 2023,
     journal = "bioRxiv",
-    doi     = "10.1101/636282",
-    textVersion = "PRAM: a novel pooling approach for discovering intergenic transcripts from large-scale RNA sequencing experiments. Peng Liu, Alexandra A. Soukup, Emery H. Bresnick, Colin N. Dewey, and Sündüz Keleş. bioRxiv, 2019. doi: https://doi.org/10.1101/636282"
+    doi     = "TO-ADD",
+    textVersion = "MPAC: a computational framework for inferring cancer pathway activities from multi-omic data. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. bioRxiv, 2023. doi: TO-ADD"
 )
