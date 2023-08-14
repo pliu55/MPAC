@@ -1,6 +1,6 @@
 ---
 title: 'MPAC: Multi-omic Pathway Analysis of Cancer'
-author: 'Peng Liu, Paul Ahlquist, Anthony Gitter, and Irene Ong'
+author: 'Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, and Anthony Gitter'
 date: '`r Sys.Date()`'
 output:
     # rmarkdown::html_vignette:
