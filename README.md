@@ -52,7 +52,7 @@ BiocManager::install("MPAC")
 
 ## <a name="Reference"></a> Reference
 
-__MAPC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2023. __doi__: TO-UPDATE!!
+__MAPC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2024. __doi__: TO-UPDATE!!
 
 
 ## <a name="ShinyApp"></a> Shiny App
