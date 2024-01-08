@@ -52,7 +52,7 @@ BiocManager::install("MPAC")
 
 ## <a name="Reference"></a> Reference
 
-__MAPC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2024. __doi__: TO-UPDATE!!
+__MPAC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2024. __doi__: TO-UPDATE!!
 
 
 ## <a name="ShinyApp"></a> Shiny App
@@ -68,4 +68,4 @@ Got a question? Please report it at the [issues tab](https://github.com/pliu55/M
 
 ## <a name="License"></a> License
 
-PRAM is licensed under the [GNU General Public License v3](LICENSE.md).
+MPAC is licensed under the [GNU General Public License v3](LICENSE.md).
