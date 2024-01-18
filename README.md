@@ -5,6 +5,8 @@
 MPAC: inferring cancer pathway activities from multi-omic data
 ===========================================
 
+* * *
+
 Table of Contents
 -----------------
 
