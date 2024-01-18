@@ -12,7 +12,7 @@ Table of Contents
 
 * [Introduction](#introduction)
 * [Installation](#installation)
-* [Shiny App](#shinyApp)
+* [Shiny App](#shinyapp)
 * [Reference](#reference)
 * [Contact](#contact)
 * [License](#license)
@@ -57,7 +57,7 @@ BiocManager::install("MPAC")
 __MPAC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2024. __doi__: TO-UPDATE!!
 
 
-## <a name="shinyApp"></a> Shiny App
+## <a name="shinyapp"></a> Shiny App
 
 To explore key results reported in the MPAC manuscript as well as associated
 results please check out
