@@ -62,7 +62,14 @@ results please check out
 
 ## <a name="softwaredependency"></a> Software Dependency
 
-The `runPrd()` function requires an external software named PARADIGM. For details, please see the __Required external software__ section in vignette's __Run PARADIGM: runPrd()__.
+The `runPrd()` function requires an external software named 
+[PARADIGM](https://doi.org/10.1093/bioinformatics/btq182),
+which is only available for 
+[Linux](
+https://github.com/sng87/paradigm-scripts/tree/master/public/exe/LINUX) and 
+[MacOS](
+https://github.com/sng87/paradigm-scripts/tree/master/public/exe/MACOSX).
+For details, please see the __Required external software__ section in vignette's __Run PARADIGM: runPrd()__.
 
 
 ## <a name="reference"></a> Reference
