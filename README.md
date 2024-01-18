@@ -13,7 +13,7 @@ Table of Contents
 * [Shiny App](#ShinyApp)
 * [Reference](#Reference)
 * [Contact](#Contact)
-* [License](#License)
+* [License](https://github.com/pliu55/MPAC#-license)
 
 * * *
 
