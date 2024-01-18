@@ -10,7 +10,7 @@ MPAC: inferring cancer pathway activities from multi-omic data
 Table of Contents
 -----------------
 
-* [Introduction](#Introduction)
+* [Introduction](#introduction)
 * [Installation](#Installation)
 * [Shiny App](#ShinyApp)
 * [Reference](#Reference)
@@ -19,7 +19,7 @@ Table of Contents
 
 * * *
 
-## <a name='Introduction'></a> Introduction
+## <a name='introduction'></a> Introduction
 
 Multi-omic Pathway Analysis of Cancer (__MPAC__) is an __R__ package that 
 interprets multi-omic data through the prior knowledge of biological pathways.
