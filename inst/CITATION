@@ -6,8 +6,8 @@ citEntry(
                          as.person("Paul Ahlquist"),
                          as.person("Irene M. Ong"),
                          as.person("Anthony Gitter") ),
-    year    = 2023,
+    year    = 2024,
     journal = "bioRxiv",
     doi     = "TO-ADD",
-    textVersion = "MPAC: a computational framework for inferring cancer pathway activities from multi-omic data. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. bioRxiv, 2023. doi: TO-ADD"
+    textVersion = "MPAC: a computational framework for inferring cancer pathway activities from multi-omic data. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. bioRxiv, 2024. doi: TO-ADD"
 )
