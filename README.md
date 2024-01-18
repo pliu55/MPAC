@@ -11,11 +11,11 @@ Table of Contents
 -----------------
 
 * [Introduction](#introduction)
-* [Installation](#Installation)
-* [Shiny App](#ShinyApp)
-* [Reference](#Reference)
-* [Contact](#Contact)
-* [License](https://github.com/pliu55/MPAC#-license)
+* [Installation](#installation)
+* [Shiny App](#shinyApp)
+* [Reference](#reference)
+* [Contact](#contact)
+* [License](#license)
 
 * * *
 
@@ -31,7 +31,7 @@ the figure below.  MPAC has a
     <img src="vignettes/workflow.jpg" width="800">
 </p>
 
-## <a name='Installation'></a> Installation
+## <a name='installation'></a> Installation
 
 ### From GitHub
 
@@ -52,22 +52,22 @@ BiocManager::install("MPAC")
 ```
 
 
-## <a name="Reference"></a> Reference
+## <a name="reference"></a> Reference
 
 __MPAC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2024. __doi__: TO-UPDATE!!
 
 
-## <a name="ShinyApp"></a> Shiny App
+## <a name="shinyApp"></a> Shiny App
 
 To explore key results reported in the MPAC manuscript as well as associated
 results please check out
 [this R Shiny app](https://github.com/pliu55/MPAC_Shiny).
 
 
-## <a name="Contact"></a> Contact
+## <a name="contact"></a> Contact
 
 Got a question? Please report it at the [issues tab](https://github.com/pliu55/MPAC/issues) in this repository.
 
-## <a name="License"></a> License
+## <a name="license"></a> License
 
 MPAC is licensed under the [GNU General Public License v3](LICENSE.md).
