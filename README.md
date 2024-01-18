@@ -74,8 +74,13 @@ For details, please see the __Required external software__ section in vignette's
 
 ## <a name="reference"></a> Reference
 
+### Manuscript
+
 __MPAC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2024. __doi__: TO-UPDATE!!
 
+### Zenodo
+
+TO-ADD!!!
 
 ## <a name="contact"></a> Contact
 
