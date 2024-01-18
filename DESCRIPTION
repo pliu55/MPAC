@@ -1,6 +1,6 @@
 Package: MPAC
 Title: Multi-omic Pathway Analysis of Cancer
-Version: 0.0.1
+Version: 0.0.0.9000
 Authors@R: c(
     person(given="Peng",    family="Liu", email="pliu55.wisc@gmail.com", 
            role = c("aut", "cre")),
