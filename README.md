@@ -13,6 +13,7 @@ Table of Contents
 * [Introduction](#introduction)
 * [Installation](#installation)
 * [Shiny App](#shinyapp)
+* [Software Dependency](#softwaredependency)
 * [Reference](#reference)
 * [Contact](#contact)
 * [License](#license)
@@ -52,16 +53,21 @@ BiocManager::install("MPAC")
 ```
 
 
-## <a name="reference"></a> Reference
-
-__MPAC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2024. __doi__: TO-UPDATE!!
-
-
 ## <a name="shinyapp"></a> Shiny App
 
 To explore key results reported in the MPAC manuscript as well as associated
 results please check out
 [this R Shiny app](https://github.com/pliu55/MPAC_Shiny).
+
+
+## <a name="softwaredependency"></a> Software Dependency
+
+The `runPrd()` function requires an external software named PARADIGM. For details, please see the __Required external software__ section in vignette's __Run PARADIGM: runPrd()__.
+
+
+## <a name="reference"></a> Reference
+
+__MPAC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2024. __doi__: TO-UPDATE!!
 
 
 ## <a name="contact"></a> Contact
