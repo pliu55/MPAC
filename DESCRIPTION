@@ -45,6 +45,6 @@ Config/testthat/edition: 3
 VignetteBuilder: knitr
 biocViews: Software, Technology, Sequencing, RNASeq, Survival, Clustering, 
     ImmunoOncology
-SystemsRequirements: runPrd() functions require external software PARADIGM. For
-    details, please see the 'Required external software' section in vignette's
-    'Run PARADIGM: runPrd()'.
+SystemsRequirements: The `runPrd()` function requires an external software 
+    named PARADIGM. For details, please see the 'Required external software' 
+    section in vignette's 'Run PARADIGM: runPrd()'.
