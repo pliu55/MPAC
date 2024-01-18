@@ -164,8 +164,7 @@ permll[[1]] %$% RNA %>% .[1:4, 1:3]
 ## PARADIGM binary
 
 ```{r, echo=FALSE}
-prd_paper_url=paste0('https://academic.oup.com/bioinformatics/article/',
-    '26/12/i237/282591')
+prd_paper_url='https://doi.org/10.1093/bioinformatics/btq182'
 prd_exe_url = paste0('https://github.com/sng87/paradigm-scripts/tree/',
     'master/public/exe/')
 prd_linux_url= paste0(prd_exe_url, 'LINUX')
