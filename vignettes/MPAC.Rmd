@@ -100,7 +100,7 @@ require(MPAC)
 - `fltByPerm()`: filter IPLs from real data by IPLs from permuted data
 - `subNtw()`: find the largest pathway network subset by filtered IPLs
 - `ovrGMT()`: do gene set over-representation on a sample's largest pathway
-  subset
+    subset
 - `clSamp()`: cluster samples by their gene set over-representation results
 - `conMtf()`: find consensus pathway motifs within a cluster
 
