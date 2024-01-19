@@ -9,6 +9,7 @@ testClSamp <- function() {
     fcmp = system.file('extdata/clSamp/clmat.rds',  package='MPAC')
 
     ovrmat = readRDS(fovr)
+    set.seed(123456)
     outmat = clSamp(ovrmat)
 
     cmpmat = readRDS(fcmp)
