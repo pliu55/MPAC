@@ -44,7 +44,12 @@ require(MPAC)
 
 # Introduction
 
-```{r, fig.cap='MPAC workflow', out.width='700px', echo=FALSE}
+From copy-number alteration (CNA), RNA-seq data, and pre-defined biological
+pathway network, MPAC computes Inferred Pathway Levels (IPLs) for pathway 
+entities, clusters patient samples by their enriched GO terms, and identifies
+key pathway proteins for each patient cluster.
+
+```{r, fig.cap='MPAC workflow', out.width='800px', echo=FALSE}
 knitr::include_graphics('workflow.jpg')
 ```
 
@@ -70,6 +75,36 @@ BiocManager::install("MPAC")
 
 For different versions of R, please refer to the appropriate
 [Bioconductor release](https://bioconductor.org/about/release-announcements/).
+
+
+# Required R packages for this vignette
+
+Please use the following code to load required packages for running this
+vignette.
+
+```{r}
+require(data.table)
+require(magrittr)
+require(MPAC)
+```
+
+# Main functions
+
+- `ppCnInp()`: prepare CNA states from real CNA data
+- `ppRnaInp()`: prepare RNA states from read RNA-seq data
+- `ppPermInp():` prepare permuted CNA and RNA states 
+- `runPrd()`: run PARADIGM to compute IPLs from real CNA and RNA states
+- `runPermPrd()`: run PARADIGM to compute IPLs from permuted CNA and RNA states
+- `colRealIPL()`: collect IPLs from real data
+- `colPermIPL()`: collect IPLs from permuted data
+- `fltByPerm()`: filter IPLs from real data by IPLs from permuted data
+- `subNtw()`: find the largest pathway network subset by filtered IPLs
+- `ovrGMT()`: do gene set over-representation on a sample's largest pathway
+  subset
+- `clSamp()`: cluster samples by their gene set over-representation results
+- `conMtf()`: find consensus pathway motifs within a cluster
+
+TO-DO: add the diagnostic function
 
 
 # Preparing input
@@ -159,7 +194,7 @@ permll[[1]] %$% RNA %>% .[1:4, 1:3]
 ```
 
 
-# Inferred pathway levels (IPLs)
+# Inferred pathway levels
 
 ## PARADIGM binary
 
