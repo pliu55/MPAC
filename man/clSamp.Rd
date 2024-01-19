@@ -12,7 +12,7 @@ with rows as gene sets and columns as samples. It is the
 output from \code{ovrGMT()}.}
 
 \item{n_neighbors}{Number of neighbors for clustering. A larger number is
-recommended the size of samples is large. Default: 10.}
+recommended if the size of samples is large. Default: 10.}
 
 \item{threads}{Number of threads to run in parallel. Default: 1}
 }
