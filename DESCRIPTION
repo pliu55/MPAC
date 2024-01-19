@@ -3,7 +3,7 @@ Title: Multi-omic Pathway Analysis of Cancer
 Version: 0.99.0
 Authors@R: c(
     person(given="Peng",    family="Liu", email="pliu55.wisc@gmail.com", 
-           role = c("aut", "cre")),
+           role = c("aut", "cre"), comment=c(ORCID="0000-0001-5655-2259")),
     person(given="Paul",    family="Ahlquist", role = c("aut")),
     person(given="Anthony", family="Gitter",   role = c("aut")),
     person(given="Irene",   family="Ong",      role = c("aut")))
