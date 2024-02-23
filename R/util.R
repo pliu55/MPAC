@@ -1,11 +1,14 @@
 #' @import magrittr
-#' @importFrom BiocParallel SnowParam
+#' @importFrom BiocParallel SnowParam MulticoreParam
 #'
 getBPPARAM <- function(threads) {
-    . = NULL
-    ifelse(Sys.info()[["sysname"]]=="Windows", 'SOCK', 'FORK') %>%
-    SnowParam(workers=threads, type=.) %>%
-    return()
+    bp = NULL
+    if ( getOS() == 'Windows' ) {
+        bp = SnowParam(workers=threads, type='SOCK')
+    } else {
+        bp = MulticoreParam(workers=threads)
+    }
+    return(bp)
 }
 
 getOS <- function() {
