@@ -1,5 +1,3 @@
-require(magrittr)
-
 main <- function() {
     testClSamp()
 }
@@ -9,13 +7,17 @@ testClSamp <- function() {
     fcmp = system.file('extdata/clSamp/clmat.rds',  package='MPAC')
 
     ovrmat = readRDS(fovr)
-    set.seed(123456)
-    outmat = clSamp(ovrmat)
-
+    outdt = clSamp(ovrmat, n_neighbors=10, n_random_runs=5) %>%
+            suppressWarnings()
+    
+    ## take the most frequent one
+    freqmat = outdt[order(-nreps)] %>% as.matrix(rownames='nreps') %>%
+        .[1, ] %>% t() %>% t()
+    colnames(freqmat) = 'icl'
     cmpmat = readRDS(fcmp)
 
     test_that('testClSamp', {
-        expect_identical(outmat, cmpmat)
+        expect_identical(freqmat, cmpmat)
     })
 }
 

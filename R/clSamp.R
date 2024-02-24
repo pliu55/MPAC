@@ -5,12 +5,20 @@
 #'                 output from `ovrGMT()`.
 #'
 #' @param n_neighbors  Number of neighbors for clustering. A larger number is
-#'                     recommended the size of samples is large. Default: 10.
+#'                     recommended if the size of samples is large. Default: 10.
+#'
+#' @param n_random_runs  Number of random runs. Due to randomness introduced
+#'                       to the Louvain algorithm in R igraph 1.3.0
+#'                       (https://github.com/igraph/rigraph/issues/539), a large
+#'                       number of runs are recommended to evaluate randomness 
+#'                       in the clustering results. Default: 100.
 #'
 #' @inheritParams ppRnaInp
 #'
-#' @return  A matrix of sample clustering result with rows as samples and a 
-#'          column of cluster index
+#' @return  A data table with each row representing a clustering results, and
+#'          the first column denotes the number of occurrences of a clustering 
+#'          result and the rest of columns indicating each sample's cluster 
+#'          index.
 #'
 #' @examples
 #'
@@ -27,11 +35,13 @@
 #' @importFrom bluster NNGraphParam
 #' @importFrom SummarizedExperiment rowData<-
 #' @importFrom S4Vectors DataFrame
+#' @importFrom BiocParallel bplapply
 #'
-clSamp <- function(ovrmat, n_neighbors=10, threads=1) {
+clSamp <- function(ovrmat, n_neighbors=10, n_random_runs=100, threads=1) {
     . = NULL
     n_top_hvgs = 100
 
+    ovrmat = ovrmat[, sort(colnames(ovrmat))]
     ovrmat[is.na(ovrmat)] = 1.0
     sce = SingleCellExperiment(
         list(logcounts = abs(log10(ovrmat))),
@@ -39,15 +49,25 @@ clSamp <- function(ovrmat, n_neighbors=10, threads=1) {
         rowData = DataFrame(goname=rownames(ovrmat))
     )
 
-    dec = modelGeneVar(sce)
+    bp = getBPPARAM(threads)
+    dec = modelGeneVar(sce, BPPARAM=bp)
     top_hvgs = getTopHVGs(dec, n=n_top_hvgs)
     rowData(sce)$is_top_hvgs = (rownames(sce) %in% top_hvgs)
 
     sce = denoisePCA(sce, subset.row=top_hvgs, technical=dec,
-        BSPARAM=RandomParam())
+        BSPARAM=RandomParam(), BPPARAM=bp)
 
-    NNGraphParam(k=n_neighbors, type='jaccard', cluster.fun='louvain') %>%
-    clusterCells(sce, use.dimred='PCA', BLUSPARAM=.) %>% as.integer() %>%
-    matrix(ncol=1, dimnames=list(colnames(sce), c('icl'))) %>%
+    ngp = NNGraphParam(k=n_neighbors, type='jaccard', cluster.fun='louvain')
+
+    pats = colnames(sce)
+
+    cldt = bplapply(seq_len(n_random_runs), function(irep) {
+        clusterCells(sce, use.dimred='PCA', BLUSPARAM=ngp) %>% as.integer() %>%
+        data.table(irep=irep, pat=pats, icl=.) %>% return()
+    }, BPPARAM=bp) %>% rbindlist() %>%
+    dcast(irep ~ pat, value.var='icl')
+
+    cldt[, list(nreps = .N), by=pats] %>%
+    .[, c('nreps', pats), with=FALSE] %>%
     return()
 }
