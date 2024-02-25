@@ -42,11 +42,11 @@ colRealIPL <- function(indir, sampleids=NULL) {
 #' colPermIPL(indir, n_perms)
 #'
 colPermIPL <- function(indir, n_perms, sampleids=NULL) {
-    . = NULL
+    . <- NULL
 
     lapply(seq_len(n_perms), function(iperm) {
-        ipldt = paste0(indir, '/p', iperm, '/') %>% colIPL(sampleids)
-        brcs = names(ipldt) %>% setdiff('entity')
+        ipldt <- paste0(indir, '/p', iperm, '/') %>% colIPL(sampleids)
+        brcs <- names(ipldt) %>% setdiff('entity')
         ipldt[, iperm := iperm] %>%
         .[, c('entity', 'iperm', brcs), with=FALSE] %>%
         return()
@@ -55,16 +55,16 @@ colPermIPL <- function(indir, n_perms, sampleids=NULL) {
 }
 
 colIPL <- function(indir, sampleids) {
-    fipls = NULL
+    fipls <- NULL
     if ( is.null(sampleids) ) {
-        fipls = list.files(path=indir, pattern="*_ipl.txt", full.names=TRUE,
+        fipls <- list.files(path=indir, pattern="*_ipl.txt", full.names=TRUE,
             recursive=FALSE)
     } else {
-        fipls = paste0(indir, '/', sampleids, '_ipl.txt')
+        fipls <- paste0(indir, '/', sampleids, '_ipl.txt')
     }
 
-    . = sampleid = fipl = NULL
-    fdt = data.table(fipl = fipls) %>%
+    . <- sampleid <- fipl <- NULL
+    fdt <- data.table(fipl = fipls) %>%
         .[, sampleid := basename(fipl) %>% tstrsplit('_ipl.txt') %$% .[[1]] ]
 
     Map(function(fin, sampleid) {
@@ -79,7 +79,7 @@ readIPL <- function(fin) {
     lapply(function(line) {
         if ((! grepl('^> ',     line, perl=TRUE)) &
             (! grepl('__\\d\t', line, perl=TRUE)) ) {
-            words = strsplit(line, "\t")[[1]]
+            words <- strsplit(line, "\t")[[1]]
             list(entity=words[1], ipl=words[2]) %>%
             return()
         }
