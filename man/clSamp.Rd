@@ -23,10 +23,11 @@ in the clustering results. Default: 100.}
 \item{threads}{Number of threads to run in parallel. Default: 1}
 }
 \value{
-A data table with each row representing a clustering results, and
+A data table with each row representing one clustering result, and
 the first column denotes the number of occurrences of a clustering
 result and the rest of columns indicating each sample's cluster
-index.
+index. Rows are ordered by the number of occurrences from high to
+low.
 }
 \description{
 Cluster samples by pathway over-representation
