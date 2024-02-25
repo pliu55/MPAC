@@ -49,7 +49,7 @@ pathway network, MPAC computes Inferred Pathway Levels (IPLs) for pathway
 entities, clusters patient samples by their enriched GO terms, and identifies
 key pathway proteins for each patient cluster.
 
-```{r, fig.cap='MPAC workflow', out.width='800px', echo=FALSE}
+```{r WorkflowJPG, fig.cap='MPAC workflow', out.width='800px', echo=FALSE}
 knitr::include_graphics('workflow.jpg')
 ```
 
@@ -383,22 +383,26 @@ ovrGMT(subntwl, fgmt, omic_gns)
 With gene set over-representation adjusted p-values, MPAC can cluster samples
 as a way to investigate shared features between samples in the same cluster.
 
+Note that, due to randomness introduced in the louvain clustering in igraph R 
+package version 1.3 (reported in its 
+[Github issue #539](https://github.com/igraph/rigraph/issues/539)), it is 
+recommended to run clustering multiple times to evaluate its variation. The 
+`clSamp()` function has an argument, `n_random_runs`, to specify the number of
+random clustering jobs to run.
+
 ```{r clSamp}
 # a matrix of gene set over-representation adjusted p-values from `ovrGMT()`
 ovrmat = system.file('extdata/clSamp/ovrmat.rds', package='MPAC') %>% readRDS()
 
-# to return a matrix of clustering results with rows as samples and a column
-# of cluster index
-clSamp(ovrmat) %>% head()
+# to return a data.table of clustering result by 5 random runs:
+#
+# - each row represents a clustering result
+# - the first column, `nreps`, indicates the number of occurrences of a
+#   clustering result in the 5 random runs
+# - the other columns represents each sample's clustering membership
+#
+clSamp(ovrmat, n_random_runs=5)
 ```
-
-## Randomness for igraph R package $\ge$ 1.3
-
-For the igraph R package after version 1.3, the Louvain method is no longer 
-deterministic as reported in 
-[its Github #539 issue](https://github.com/igraph/rigraph/issues/539).
-
-!!!! To-finished !!!!
 
 
 # Find consensus pathway motifs within a cluster
