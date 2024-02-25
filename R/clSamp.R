@@ -15,10 +15,11 @@
 #'
 #' @inheritParams ppRnaInp
 #'
-#' @return  A data table with each row representing a clustering results, and
+#' @return  A data table with each row representing one clustering result, and
 #'          the first column denotes the number of occurrences of a clustering 
 #'          result and the rest of columns indicating each sample's cluster 
-#'          index.
+#'          index. Rows are ordered by the number of occurrences from high to 
+#'          low.
 #'
 #' @examples
 #'
@@ -38,36 +39,36 @@
 #' @importFrom BiocParallel bplapply
 #'
 clSamp <- function(ovrmat, n_neighbors=10, n_random_runs=100, threads=1) {
-    . = NULL
-    n_top_hvgs = 100
+    . <- NULL
+    n_top_hvgs <- 100
 
-    ovrmat = ovrmat[, sort(colnames(ovrmat))]
-    ovrmat[is.na(ovrmat)] = 1.0
-    sce = SingleCellExperiment(
+    ovrmat <- ovrmat[, sort(colnames(ovrmat))]
+    ovrmat[is.na(ovrmat)] <- 1.0
+    sce <- SingleCellExperiment(
         list(logcounts = abs(log10(ovrmat))),
         colData = DataFrame(samp=colnames(ovrmat)), 
         rowData = DataFrame(goname=rownames(ovrmat))
     )
 
-    bp = getBPPARAM(threads)
-    dec = modelGeneVar(sce, BPPARAM=bp)
-    top_hvgs = getTopHVGs(dec, n=n_top_hvgs)
-    rowData(sce)$is_top_hvgs = (rownames(sce) %in% top_hvgs)
+    bp <- getBPPARAM(threads)
+    dec <- modelGeneVar(sce, BPPARAM=bp)
+    top_hvgs <- getTopHVGs(dec, n=n_top_hvgs)
+    rowData(sce)$is_top_hvgs <- (rownames(sce) %in% top_hvgs)
 
-    sce = denoisePCA(sce, subset.row=top_hvgs, technical=dec,
+    sce <- denoisePCA(sce, subset.row=top_hvgs, technical=dec,
         BSPARAM=RandomParam(), BPPARAM=bp)
 
-    ngp = NNGraphParam(k=n_neighbors, type='jaccard', cluster.fun='louvain')
+    ngp <- NNGraphParam(k=n_neighbors, type='jaccard', cluster.fun='louvain')
 
-    pats = colnames(sce)
+    pats <- colnames(sce)
 
-    cldt = bplapply(seq_len(n_random_runs), function(irep) {
+    cldt <- bplapply(seq_len(n_random_runs), function(irep) {
         clusterCells(sce, use.dimred='PCA', BLUSPARAM=ngp) %>% as.integer() %>%
         data.table(irep=irep, pat=pats, icl=.) %>% return()
     }, BPPARAM=bp) %>% rbindlist() %>%
     dcast(irep ~ pat, value.var='icl')
 
     cldt[, list(nreps = .N), by=pats] %>%
-    .[, c('nreps', pats), with=FALSE] %>%
+    .[, c('nreps', pats), with=FALSE] %>% .[order(-nreps)] %>%
     return()
 }
