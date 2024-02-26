@@ -31,6 +31,7 @@ pltNeiStt <- function(cn_state_mat, rna_state_mat, fltmat, fpth, protein) {
     nodedt <- ppNode4PltNeiStt(fpth, protein)
     pltmat <- ppMat4PltNeiStt(cn_state_mat, rna_state_mat, fltmat, nodedt)
 
+    id <- NULL
     plt_nodedt <- nodedt[ id %in% rownames(pltmat) ]
 
     makeHmNeiStt(pltmat, plt_nodedt)
@@ -40,6 +41,7 @@ pltNeiStt <- function(cn_state_mat, rna_state_mat, fltmat, fpth, protein) {
 #' @importFrom grid  gpar unit
 #'
 makeHmNeiStt <- function(pltmat, nodedt) {
+    level <- type <- id <- row_grp <- NULL
     nodedt <- nodedt[order(level, type, id)]
     nodedt[, row_grp := factor(row_grp, levels=unique(nodedt$row_grp))]
     pltmat <- pltmat[ nodedt$id, ]
@@ -86,6 +88,7 @@ ppMat4PltNeiStt <- function(cnmat, rnamat, iplmat, nodedt) {
     pats <- intersect(colnames(cnmat), colnames(rnamat)) |>
             intersect(colnames(iplmat)) |> sort()
 
+    type <- NULL
     ents <- intersect(nodedt[ type != 'omic' ]$id, rownames(iplmat))
     pltmat <- rbind(cnmat[, pats], rnamat[, pats], sign(iplmat)[ents, pats])
     rownames(pltmat) <- c('CNA', 'RNA-seq', ents)
@@ -94,6 +97,7 @@ ppMat4PltNeiStt <- function(cnmat, rnamat, iplmat, nodedt) {
 }
 
 ppNode4PltNeiStt <- function(fpth, gnname) {
+    to <- from <- nei <- entity <- . <- desc <- row_grp <- loc <- NULL
     pthlist <- getNodeEdge(fpth)
     in_nodedt <- pthlist$nodedt
     in_edgedt <- pthlist$edgedt
@@ -118,6 +122,7 @@ ppNode4PltNeiStt <- function(fpth, gnname) {
 }
 
 orderNodes <- function(nodedt, up_ents, dn_ents, gnname) {
+    id <- label <- level <- loc <- NULL
     nodedt[, id := factor(id, 
         levels=unique(c(up_ents, dn_ents, 'CNA', gnname, 'RNA-seq')))] |>
     _[, label := gsub('_', ' ', id)] |>

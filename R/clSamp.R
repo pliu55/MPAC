@@ -68,6 +68,7 @@ clSamp <- function(ovrmat, n_neighbors=10, n_random_runs=100, threads=1) {
     }, BPPARAM=bp) %>% rbindlist() %>%
     dcast(irep ~ pat, value.var='icl')
 
+    nreps <- NULL
     cldt[, list(nreps = .N), by=pats] %>%
     .[, c('nreps', pats), with=FALSE] %>% .[order(-nreps)] %>%
     return()
