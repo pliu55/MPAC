@@ -82,7 +82,7 @@ For different versions of R, please refer to the appropriate
 Please use the following code to load required packages for running this
 vignette.
 
-```{r}
+```{r requiredPkg}
 require(data.table)
 require(magrittr)
 require(MPAC)
@@ -421,6 +421,40 @@ omic_gns = system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC') %>%
 
 # to return a list of igraph objects representing consensus motifs
 conMtf(subntwl, omic_gns, min_mtf_n_nodes=50)
+```
+
+# Diagnostic plot
+
+MPAC implemented a diagnostic function to plot a heatmap of the omic and 
+pathway states of a protein as well as the pathway states of this protein's 
+pathway neighbors. This heatmap facilitates the identification of pathway 
+determinants of this protein.
+
+```{r pltNeiStt}
+#| fig.dim = c(8, 3.5),
+#| fig.cap = "A heatmap of CD86's omic and pathway state as well as its pathway
+#|            neighbor's states."
+
+# protein of focus
+protein = 'CD86'
+
+# input pathway file
+fpth = system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
+
+# CN state matrix from `ppCnInp()`
+cn_state_mat  = system.file('extdata/pltNeiStt/inp_focal.rds',       
+                            package='MPAC') %>% readRDS()
+
+# RNA state matrix from `ppRnaInp()`
+rna_state_mat = system.file('extdata/pltNeiStt/inp_log10fpkmP1.rds', 
+                            package='MPAC') %>% readRDS()
+
+# filtered IPL matrix from `fltByPerm()`
+fltmat= system.file('extdata/pltNeiStt/fltmat.rds',          
+                    package='MPAC') %>% readRDS()
+
+# to plot heatmap
+pltNeiStt(cn_state_mat, rna_state_mat, fltmat, fpth, protein)
 ```
 
 # Session Info
