@@ -52,10 +52,10 @@
 runPrd <- function(cn_state_mat, rna_state_mat, fpth, outdir, PARADIGM_bin=NULL,
     nohup_bin=NULL, sampleids=NULL, threads=1) {
 
-    jntl = findJntPatProt(cn_state_mat, rna_state_mat, fpth, sampleids)
+    jntl <- findJntPatProt(cn_state_mat, rna_state_mat, fpth, sampleids)
     if ( ! file.exists(outdir)) dir.create(outdir, recursive=TRUE)
 
-    dummy = bplapply(jntl$pats, runPrdByPat, jntl$cn, jntl$rna, fpth, outdir, 
+    dummy <- bplapply(jntl$pats, runPrdByPat, jntl$cn, jntl$rna, fpth, outdir, 
         PARADIGM_bin, nohup_bin, BPPARAM=getBPPARAM(threads))
 }
 
@@ -89,9 +89,9 @@ runPrd <- function(cn_state_mat, rna_state_mat, fpth, outdir, PARADIGM_bin=NULL,
 runPermPrd <- function(permll, fpth, outdir, PARADIGM_bin=NULL, nohup_bin=NULL,
     sampleids=NULL, threads=1) {
 
-    dummy = lapply(permll, function(permlist) {
-        iperm_tag = paste0('p', permlist$iperm)
-        iperm_outdir = paste0(outdir, '/', iperm_tag, '/')
+    dummy <- lapply(permll, function(permlist) {
+        iperm_tag <- paste0('p', permlist$iperm)
+        iperm_outdir <- paste0(outdir, '/', iperm_tag, '/')
         runPrd(permlist$CN, permlist$RNA, fpth, iperm_outdir, PARADIGM_bin, 
             nohup_bin, sampleids, threads)
     })
@@ -99,22 +99,22 @@ runPermPrd <- function(permll, fpth, outdir, PARADIGM_bin=NULL, nohup_bin=NULL,
 
 
 findJntPatProt <- function(cn_state_mat, rna_state_mat, fpth, sampleids) {
-    in_cnmat  = t(cn_state_mat)
-    in_rnamat = t(rna_state_mat)
+    in_cnmat  <- t(cn_state_mat)
+    in_rnamat <- t(rna_state_mat)
 
-    lines = readLines(fpth)
-    . = NULL
-    pth_prots = lines[grepl("^protein\t", lines, perl=TRUE)] %>%
+    lines <- readLines(fpth)
+    . <- NULL
+    pth_prots <- lines[grepl("^protein\t", lines, perl=TRUE)] %>%
                 tstrsplit("\t") %$% .[[2]]
 
-    pats  = intersect(rownames(in_cnmat), rownames(in_rnamat)) %>%
+    pats <- intersect(rownames(in_cnmat), rownames(in_rnamat)) %>%
             intersect(sampleids) %>% sort()
 
-    prots = intersect(colnames(in_cnmat), colnames(in_rnamat)) %>%
+    prots <- intersect(colnames(in_cnmat), colnames(in_rnamat)) %>%
             intersect(pth_prots) %>% sort()
 
-    cnmat  = in_cnmat[ pats, prots, drop=FALSE]
-    rnamat = in_rnamat[pats, prots, drop=FALSE]
+    cnmat  <- in_cnmat[ pats, prots, drop=FALSE]
+    rnamat <- in_rnamat[pats, prots, drop=FALSE]
 
     list(pats=pats, cn=cnmat, rna=rnamat) %>% return()
 }
@@ -122,22 +122,22 @@ findJntPatProt <- function(cn_state_mat, rna_state_mat, fpth, sampleids) {
 runPrdByPat <- function(pat, cnmat, rnamat, fpth, outdir, PARADIGM_bin,
     nohup_bin) {
 
-    fone_samp = tag = . = NULL
-    out_prefix = paste0(outdir, '/', pat, '_')
-    omicdt = data.table( rbind(
+    fone_samp <- tag <- . <- NULL
+    out_prefix <- paste0(outdir, '/', pat, '_')
+    omicdt <- data.table( rbind(
         c( 'genome', 'inp_focal'       ),
         c( 'mRNA',   'inp_log10fpkmP1' )
     )) %>% setnames( c('type', 'tag') ) %>%
     .[, fone_samp := paste0(out_prefix,  tag, '.tsv')]
 
-    type2mat = list( 
+    type2mat <- list( 
         'genome' = cnmat[ pat, , drop=FALSE], 
         'mRNA'   = rnamat[pat, , drop=FALSE] 
     )
 
-    fcfg = paste0(out_prefix, 'cfg.txt')
-    fcpt = paste0(out_prefix, 'cpt.txt')
-    fipl = paste0(out_prefix, 'ipl.txt')
+    fcfg <- paste0(out_prefix, 'cfg.txt')
+    fcpt <- paste0(out_prefix, 'cpt.txt')
+    fipl <- paste0(out_prefix, 'ipl.txt')
 
     Map(prepOmic, omicdt$type, omicdt$fone_samp, MoreArgs=list(type2mat))
 
@@ -155,7 +155,7 @@ prepOmic <- function(type, fone_samp, type2mat) {
 runPARADIGM <- function(fcfg, fcpt, fipl, out_prefix, fpth, PARADIGM_bin, 
     nohup_bin){
     
-    args = c( 
+    args <- c( 
         '-p', fpth,
         '-c', fcfg, 
         '-b', dirname(out_prefix) %>% paste0('/'),
@@ -164,12 +164,12 @@ runPARADIGM <- function(fcfg, fcpt, fipl, out_prefix, fpth, PARADIGM_bin,
         '-m 1'  ## max_mem_in_G
     )
     
-    fout = paste0(out_prefix, 'run.out')
-    ferr = paste0(out_prefix, 'run.err')
+    fout <- paste0(out_prefix, 'run.out')
+    ferr <- paste0(out_prefix, 'run.err')
 
     if ( is.null(PARADIGM_bin) ) {
         # PARADIGM_bin = dlParadigmBin()
-        url='https://github.com/sng87/paradigm-scripts/tree/master/public/exe'
+        url<-'https://github.com/sng87/paradigm-scripts/tree/master/public/exe'
         paste0("Please provide PARADIGM binary. It can be downloaded from ",
             url, "\n") %>% stop()
     }
@@ -178,19 +178,19 @@ runPARADIGM <- function(fcfg, fcpt, fipl, out_prefix, fpth, PARADIGM_bin,
     if ( is.null(nohup_bin) ) {
         system2(PARADIGM_bin, args=args, stdout=fout, stderr=ferr)
     } else {
-        args = c(PARADIGM_bin, args)
+        args <- c(PARADIGM_bin, args)
         system2(nohup_bin, args=args, stdout=fout, stderr=ferr)
     }
 }
 
 prepConfig <- function(fcfg, omicdt) {
-    s_obss = c()
-    s_evis = c()
+    s_obss <- c()
+    s_evis <- c()
     options(scipen=10) ## for cnv_cutoff == 0.0001
     for ( i in seq_len(nrow(omicdt)) ) {
-        fname_one_samp = basename(omicdt[i]$fone_samp)
-        s_obss = c(s_obss, paste0(fname_one_samp, '=-obs>'))
-        s_evis = c(s_evis, paste0('evidence [suffix=', fname_one_samp,
+        fname_one_samp <- basename(omicdt[i]$fone_samp)
+        s_obss <- c(s_obss, paste0(fname_one_samp, '=-obs>'))
+        s_evis <- c(s_evis, paste0('evidence [suffix=', fname_one_samp,
             ',node=', omicdt[i]$type, ',disc=-0.5;0.5',
             ',epsilon=0.001,epsilon0=0.2]'))
     }

@@ -22,7 +22,7 @@
 #' fltByPerm(realdt, permdt)
 #'
 fltByPerm <- function(realdt, permdt) {
-    pats = intersect(names(realdt), names(permdt)) %>% setdiff('entity')
+    pats <- intersect(names(realdt), names(permdt)) %>% setdiff('entity')
 
     lapply(pats, fltByPat, realdt, permdt) %>% rbindlist() %>%
     dcast(entity ~ pat, value.var='flt_real_ipl') %>%
@@ -32,19 +32,19 @@ fltByPerm <- function(realdt, permdt) {
 
 #' @importFrom stats  mad median
 fltByPat <- function(pat, in_realdt, in_permdt) {
-    realdt = in_realdt[, c('entity', pat), with=FALSE] %>%
+    realdt <- in_realdt[, c('entity', pat), with=FALSE] %>%
         setnames(pat, 'real_ipl')
 
-    perm_mat = in_permdt[, c('entity', 'iperm', pat), with=FALSE] %>%
+    perm_mat <- in_permdt[, c('entity', 'iperm', pat), with=FALSE] %>%
         dcast(iperm ~ entity, value.var=pat) %>% as.matrix(rownames='iperm')
 
-    median_vec = apply(perm_mat, 2, median)
-    mad_vec    = apply(perm_mat, 2, mad)
+    median_vec <- apply(perm_mat, 2, median)
+    mad_vec    <- apply(perm_mat, 2, mad)
 
-    . = perm_median = perm_mad = is_real = med_m_3mad = med_p_3mad = NULL
-    real_ipl = flt_real_ipl = entity = NULL
+    . <- perm_median <- perm_mad <- is_real <- med_m_3mad <- med_p_3mad <- NULL
+    real_ipl <- flt_real_ipl <- entity <- NULL
 
-    maddt = data.table( 
+    maddt <- data.table( 
         entity      = names(mad_vec),
         perm_median = median_vec,
         perm_mad    = mad_vec ) %>%

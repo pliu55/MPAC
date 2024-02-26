@@ -33,20 +33,20 @@
 #' @importFrom fgsea gmtPathways
 #'
 subNtw <- function(fltmat, fpth, fgmt, min_n_gmt_gns=2, threads=1) {
-    . = NULL
+    . <- NULL
 
-    pthl = getNodeEdge(fpth)
-    nodedt = pthl$nodedt
-    edgedt = pthl$edgedt
+    pthl <- getNodeEdge(fpth)
+    nodedt <- pthl$nodedt
+    edgedt <- pthl$edgedt
 
-    gmt_gns = gmtPathways(fgmt) %>% do.call(c, .) %>% unique()
-    sampleids = colnames(fltmat)
+    gmt_gns <- gmtPathways(fgmt) %>% do.call(c, .) %>% unique()
+    sampleids <- colnames(fltmat)
 
-    outl = getBPPARAM(threads) %>% 
+    outl <- getBPPARAM(threads) %>% 
         bplapply(sampleids, getSubNtwByPat, nodedt, edgedt, fltmat, gmt_gns,
         min_n_gmt_gns, BPPARAM=.)
 
-    names(outl) = sampleids
+    names(outl) <- sampleids
     return(outl)
 }
 
@@ -55,27 +55,27 @@ subNtw <- function(fltmat, fpth, fgmt, min_n_gmt_gns=2, threads=1) {
 getSubNtwByPat <- function(pat, in_nodedt, in_edgedt, fltmat, gmt_gns, 
     min_n_gmt_gns) {
 
-    . = nents = from = to = entity = isub = NULL
+    . <- nents <- from <- to <- entity <- isub <- NULL
 
-    ipls = fltmat[, pat]
-    ents = ipls[ ! is.na(ipls) ] %>% names()
+    ipls <- fltmat[, pat]
+    ents <- ipls[ ! is.na(ipls) ] %>% names()
 
-    ipldt = fltmat[, pat, drop=FALSE] %>%
+    ipldt <- fltmat[, pat, drop=FALSE] %>%
         as.data.table(keep.rownames='entity') %>% setnames(pat, 'ipl')
-    edgedt = in_edgedt[(from %in% ents) & (to %in% ents)]
-    nodedt = in_nodedt[(entity %in% edgedt$from) | (entity %in% edgedt$to)] %>%
+    edgedt <- in_edgedt[(from %in% ents) & (to %in% ents)]
+    nodedt <- in_nodedt[(entity %in% edgedt$from) | (entity %in% edgedt$to)] %>%
         merge(ipldt, by='entity', all.x=TRUE)
 
-    subl = graph_from_data_frame(d=edgedt, directed=TRUE, vertices=nodedt) %>%
+    subl <- graph_from_data_frame(d=edgedt, directed=TRUE, vertices=nodedt) %>%
         decompose() %>%
         Filter(function(g) {
-            n_gmt_gns = intersect(V(g)$name, gmt_gns) %>% length()
+            n_gmt_gns <- intersect(V(g)$name, gmt_gns) %>% length()
             return(n_gmt_gns >= min_n_gmt_gns)
         }, .)
 
-    ndt = length(subl) %>% seq_len() %>% lapply(function(isub) 
+    ndt <- length(subl) %>% seq_len() %>% lapply(function(isub) 
         list(isub=isub, nents=length(V(subl[[isub]])$name))) %>% rbindlist()
 
-    subntw = ndt[ nents == max(nents)] %$% isub %>% subl[[.]]
+    subntw <- ndt[ nents == max(nents)] %$% isub %>% subl[[.]]
     return(subntw)
 }

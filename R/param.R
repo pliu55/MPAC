@@ -1,6 +1,6 @@
-FONT_SIZE = 11
-MAGENTA = '#CC79A7'
-CYAN    = '#56B4E9'
+FONT_SIZE <- 11
+MAGENTA <- '#CC79A7'
+CYAN    <- '#56B4E9'
 
 DASHDT <- data.table( rbind(
     c( '-a|',        'protein repression'         ),

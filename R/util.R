@@ -2,34 +2,34 @@
 #' @importFrom BiocParallel SnowParam MulticoreParam
 #'
 getBPPARAM <- function(threads) {
-    bp = NULL
+    bp <- NULL
     if ( getOS() == 'Windows' ) {
-        bp = SnowParam(workers=threads, type='SOCK')
+        bp <- SnowParam(workers=threads, type='SOCK')
     } else {
-        bp = MulticoreParam(workers=threads)
+        bp <- MulticoreParam(workers=threads)
     }
     return(bp)
 }
 
 getOS <- function() {
-    os = toupper(.Platform$OS.type)
-    sysinf = Sys.info()
+    os <- toupper(.Platform$OS.type)
+    sysinf <- Sys.info()
     if ( !is.null(sysinf) ) {
-        os = sysinf['sysname']
+        os <- sysinf['sysname']
         if ( os == 'Darwin' ) {
-            os = "OSX"
+            os <- "OSX"
         } else if ( os == 'Linux' ) {
-            os = "LINUX"
+            os <- "LINUX"
         } else {
-            os = "WINDOWS"
+            os <- "WINDOWS"
         }
     } else {
         if ( grepl("^darwin", R.version$os, perl=TRUE) ) {
-            os = "OSX"
+            os <- "OSX"
         } else if ( grepl("linux-gnu", R.version$os, perl=TRUE) ) {
-            os = "LINUX"
+            os <- "LINUX"
         } else {
-            os = "WINDOWS"
+            os <- "WINDOWS"
         }
     }
 
@@ -43,16 +43,16 @@ getOS <- function() {
 #' @importFrom utils download.file
 #'
 dlParadigmBin <- function() {
-    os = getOS()
+    os <- getOS()
     
     ## to get $url, right-click the 'raw' button on Github file page
-    url = 'https://github.com/sng87/paradigm-scripts/raw/master/public/exe/'
+    url <- 'https://github.com/sng87/paradigm-scripts/raw/master/public/exe/'
     if ( os == 'LINUX' ) {
-        url = paste0(url, 'LINUX/paradigm')
+        url <- paste0(url, 'LINUX/paradigm')
     } else if ( os == 'OSX' ) {
-        url = paste0(url, 'MACOS/paradigm')
+        url <- paste0(url, 'MACOS/paradigm')
     }
-    flocal = paste0(tempdir(), '/paradigm')
+    flocal <- paste0(tempdir(), '/paradigm')
 
     ## wget --no-check-certificate
     ## curl -LJ $url
@@ -66,23 +66,23 @@ dlParadigmBin <- function() {
 
 ## file.exists cannot give T/F for character(0)
 fileExists <- function(f) {
-    is_existed = ifelse( identical(f, character(0)), FALSE,
+    is_existed <- ifelse( identical(f, character(0)), FALSE,
         ifelse( ! file.exists(f), FALSE, TRUE))
     return(is_existed)
 }
 
 
 getNodeEdge <- function(fpth) {
-    . = entity = type = from = to = title = NULL
+    . <- entity <- type <- from <- to <- title <- NULL
 
-    wordslist = readLines(fpth) %>% strsplit("\t")
+    wordslist <- readLines(fpth) %>% strsplit("\t")
 
-    nodedt = lapply(wordslist, function(words) {
+    nodedt <- lapply(wordslist, function(words) {
         if (length(words) == 2) as.list(words) %>% return()
     }) %>% rbindlist() %>% setnames( c('type', 'entity') ) %>% 
     .[, .(entity, type)]
 
-    edgedt = lapply(wordslist, function(words) {
+    edgedt <- lapply(wordslist, function(words) {
         if (length(words) == 3) as.list(words) %>% return()
     }) %>% rbindlist() %>% setnames( c('from', 'to', 'title') ) %>%
     .[, .(from, to, title)]

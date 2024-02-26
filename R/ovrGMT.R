@@ -32,16 +32,16 @@
 #' @importFrom fgsea gmtPathways
 #'
 ovrGMT <- function(subntwlist, fgmt, omic_genes=NULL, threads=1) {
-    . = NULL
+    . <- NULL
 
-    gmtl = gmtPathways(fgmt)
-    gmt_gns = do.call(c, gmtl) %>% unique()
+    gmtl <- gmtPathways(fgmt)
+    gmt_gns <- do.call(c, gmtl) %>% unique()
 
-    urn_balls = NULL
+    urn_balls <- NULL
     if ( is.null(omic_genes) ) {
-        urn_balls = gmt_gns
+        urn_balls <- gmt_gns
     } else {
-        urn_balls = intersect(gmt_gns, omic_genes)
+        urn_balls <- intersect(gmt_gns, omic_genes)
     }
 
     getBPPARAM(threads) %>% 
@@ -54,13 +54,13 @@ ovrGMT <- function(subntwlist, fgmt, omic_genes=NULL, threads=1) {
 
 #' @importFrom stats p.adjust
 getOvrSubNtwByPat <- function(pat, gmtl, urn_balls, subntwlist) {
-    . = fisher_padj = ipl = name = fisher_pval = NULL
+    . <- fisher_padj <- ipl <- name <- fisher_pval <- NULL
 
-    subgrph = subntwlist[[pat]]
-    sel_ents = as_data_frame(subgrph, what='vertices') %>% data.table() %>%
+    subgrph <- subntwlist[[pat]]
+    sel_ents <- as_data_frame(subgrph, what='vertices') %>% data.table() %>%
         .[ abs(ipl) > 0 ] %$% name
 
-    urn_white_balls = intersect(sel_ents, urn_balls)
+    urn_white_balls <- intersect(sel_ents, urn_balls)
 
     lapply(names(gmtl), defOvrByGmt, gmtl, urn_balls, urn_white_balls) %>%
     rbindlist() %>% .[order(fisher_pval)] %>%
@@ -71,22 +71,22 @@ getOvrSubNtwByPat <- function(pat, gmtl, urn_balls, subntwlist) {
 
 #' @importFrom stats fisher.test
 defOvrByGmt <- function(goname, gmtl, urn_balls, urn_white_balls) {
-    p.value = NULL
+    p.value <- NULL
 
-    gmt_gns = gmtl[[goname]]
-    drawn_balls         = intersect(gmt_gns, urn_balls)
-    n_drawn_white_balls = intersect(drawn_balls, urn_white_balls) %>% length()
-    n_drawn_black_balls = length(drawn_balls) - n_drawn_white_balls
-    n_not_drawn_balls   = length(urn_balls) - length(drawn_balls)
-    n_not_drawn_white_balls = length(urn_white_balls) - n_drawn_white_balls
-    n_not_drawn_black_balls = n_not_drawn_balls - n_not_drawn_white_balls
+    gmt_gns <- gmtl[[goname]]
+    drawn_balls         <- intersect(gmt_gns, urn_balls)
+    n_drawn_white_balls <- intersect(drawn_balls, urn_white_balls) %>% length()
+    n_drawn_black_balls <- length(drawn_balls) - n_drawn_white_balls
+    n_not_drawn_balls   <- length(urn_balls) - length(drawn_balls)
+    n_not_drawn_white_balls <- length(urn_white_balls) - n_drawn_white_balls
+    n_not_drawn_black_balls <- n_not_drawn_balls - n_not_drawn_white_balls
 
     if ( n_drawn_white_balls > 0 ) {
-        fisher_pval = matrix(c(n_drawn_white_balls, n_not_drawn_white_balls,
+        fisher_pval <- matrix(c(n_drawn_white_balls, n_not_drawn_white_balls,
             n_drawn_black_balls, n_not_drawn_black_balls),
             nrow=2, byrow=TRUE) %>% fisher.test() %$% p.value
     } else {
-        fisher_pval = NA
+        fisher_pval <- NA
     }
 
     list( 

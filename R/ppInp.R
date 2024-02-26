@@ -49,7 +49,7 @@ ppCnInp <- function(cn_tumor_mat) {
 #' @importFrom BiocParallel  SnowParam bplapply
 #'
 ppRnaInp <- function(rna_tumor_mat, rna_normal_mat, threads=1) {
-    . = NULL
+    . <- NULL
 
     getBPPARAM(threads) %>%
     bplapply(rownames(rna_normal_mat), fitByGn, rna_normal_mat, BPPARAM=.) %>% 
@@ -59,7 +59,7 @@ ppRnaInp <- function(rna_tumor_mat, rna_normal_mat, threads=1) {
 }
 
 defState <- function(fitdt, tumor_mat) {
-    norm_mean = norm_sd = m_m_2sd = m_p_2sd = val = state = . = NULL
+    norm_mean <- norm_sd <- m_m_2sd <- m_p_2sd <- val <- state <- . <- NULL
     fitdt[, `:=`(
         m_m_2sd = norm_mean - 2 * norm_sd,
         m_p_2sd = norm_mean + 2 * norm_sd)]
@@ -77,16 +77,16 @@ defState <- function(fitdt, tumor_mat) {
 #' @importFrom fitdistrplus mgedist
 #'
 fitByGn <- function(gnname, mat) {
-    vec = mat[gnname, ]
-    outl = list(gnname = gnname)
-    scaling_dummy = 10 ## for fitting on very small numbers
+    vec <- mat[gnname, ]
+    outl <- list(gnname = gnname)
+    scaling_dummy <- 10 ## for fitting on very small numbers
     if ( all(vec == vec[1]) ) {
-        outl$norm_mean = vec[1]
-        outl$norm_sd   = 0
+        outl$norm_mean <- vec[1]
+        outl$norm_sd   <- 0
     } else {
-        fit = fitdistrplus::mgedist(vec*scaling_dummy, distr='norm')
-        outl$norm_mean = fit$estimate['mean']/scaling_dummy
-        outl$norm_sd   = fit$estimate['sd']/scaling_dummy
+        fit <- fitdistrplus::mgedist(vec*scaling_dummy, distr='norm')
+        outl$norm_mean <- fit$estimate['mean']/scaling_dummy
+        outl$norm_sd   <- fit$estimate['sd']/scaling_dummy
     }
 
     return(outl)
@@ -126,14 +126,14 @@ fitByGn <- function(gnname, mat) {
 #' ppPermInp(real_cn_mat, real_rna_mat, n_perms=3)
 #'
 ppPermInp <- function(real_cn_mat, real_rna_mat, n_perms=3, threads=1) {
-    . = NULL
+    . <- NULL
 
-    in_cnvmat = t(real_cn_mat)
-    in_rnamat = t(real_rna_mat)
+    in_cnvmat <- t(real_cn_mat)
+    in_rnamat <- t(real_rna_mat)
 
-    ngns = ncol(in_cnvmat)
+    ngns <- ncol(in_cnvmat)
 
-    permlist = lapply(seq_len(n_perms), 
+    permlist <- lapply(seq_len(n_perms), 
         function(x) sample(ngns, ngns, replace=FALSE))
 
     getBPPARAM(threads) %>%
@@ -145,12 +145,12 @@ ppPermInp <- function(real_cn_mat, real_rna_mat, n_perms=3, threads=1) {
 #' @importFrom magrittr %>%
 #'
 ppByIPerm <- function(iperm, permlist, in_cnvmat, in_rnamat) {
-    perms = permlist[[iperm]]
+    perms <- permlist[[iperm]]
 
-    cnvmat = in_cnvmat[, perms]
-    rnamat = in_rnamat[, perms]
+    cnvmat <- in_cnvmat[, perms]
+    rnamat <- in_rnamat[, perms]
 
-    colnames(cnvmat) = colnames(in_cnvmat)
-    colnames(rnamat) = colnames(in_rnamat)
+    colnames(cnvmat) <- colnames(in_cnvmat)
+    colnames(rnamat) <- colnames(in_rnamat)
     list(iperm=iperm, CN=t(cnvmat), RNA=t(rnamat)) %>% return()
 }

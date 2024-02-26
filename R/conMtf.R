@@ -24,24 +24,24 @@
 #' @import igraph
 #'
 conMtf <- function(subntwl, omic_genes=NULL, min_mtf_n_nodes=5) {
-    . = ent = n_pats = NULL
+    . <- ent <- n_pats <- NULL
 
-    n_subntws = length(subntwl)
-    names(subntwl) = paste0('samp', seq_len(n_subntws))
+    n_subntws <- length(subntwl)
+    names(subntwl) <- paste0('samp', seq_len(n_subntws))
 
-    con_ents = lapply(names(subntwl), function(pat) {
+    con_ents <- lapply(names(subntwl), function(pat) {
         data.table(pat=pat, ent=V(subntwl[[pat]])$name) %>% return()
     }) %>% rbindlist() %>%
     .[, list(n_pats = .N), by=ent] %>% .[ n_pats == n_subntws] %$% ent
 
-    conl = induced_subgraph(subntwl[[1]], con_ents) %>%
+    conl <- induced_subgraph(subntwl[[1]], con_ents) %>%
         decompose.graph(min.vertices=min_mtf_n_nodes)
 
-    out_conl = NULL
+    out_conl <- NULL
     if ( is.null(omic_genes) ) {
-        out_conl = conl 
+        out_conl <- conl 
     } else {
-        out_conl = Filter(function(grph) {
+        out_conl <- Filter(function(grph) {
             length(intersect(V(grph)$name, omic_genes)) > 0
         }, conl) 
     }
