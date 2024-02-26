@@ -43,8 +43,6 @@ paradigm_bin = '/path/to/PARADIGM'  ## change to binary location
 pat = 'TCGA-CV-7100'
 
 # depends on external PARADIGM binary, do not run
-\donttest{
 runPermPrd(permll, fpth, outdir, paradigm_bin, sampleids=c(pat))
-}
 
 }

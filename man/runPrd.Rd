@@ -51,9 +51,7 @@ outdir = tempdir()
 paradigm_bin = '/path/to/PARADIGM'  ## change to binary location
 
 # depends on external PARADIGM binary, do not run
-\donttest{
 runPrd(cn_state_mat, rna_state_mat, fpth, outdir, paradigm_bin, 
     sampleids=c('TCGA-CF-7100'))
-}
 
 }
