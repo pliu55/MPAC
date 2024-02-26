@@ -103,8 +103,8 @@ require(MPAC)
     subset
 - `clSamp()`: cluster samples by their gene set over-representation results
 - `conMtf()`: find consensus pathway motifs within a cluster
+- `pltNeiStt()`: plot a heatmap to identify a protein's pathway determinants
 
-TO-DO: add the diagnostic function
 
 
 # Preparing input
