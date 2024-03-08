@@ -80,7 +80,7 @@ readIPL <- function(fin) {
         if ((! grepl('^> ',     line, perl=TRUE)) &
             (! grepl('__\\d\t', line, perl=TRUE)) ) {
             words <- strsplit(line, "\t")[[1]]
-            list(entity=words[1], ipl=words[2]) %>%
+            list(entity=words[1], ipl=as.numeric(words[2])) %>%
             return()
         }
     }) %>% rbindlist() %>%
