@@ -2,6 +2,8 @@
 ![bioc](http://www.bioconductor.org/shields/years-in-bioc/MPAC.svg)](http://bioconductor.org/packages/devel/bioc/html/MPAC.html)
 -->
 
+[![DOI](https://zenodo.org/badge/664257440.svg)](https://zenodo.org/doi/10.5281/zenodo.10805479)
+
 MPAC: inferring cancer pathway activities from multi-omic data
 ===========================================
 
@@ -77,10 +79,6 @@ For details, please see the __Required external software__ section in vignette's
 ### Manuscript
 
 __MPAC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2024. __doi__: TO-UPDATE!!
-
-### Zenodo
-
-TO-ADD!!!
 
 ## <a name="contact"></a> Contact
 
