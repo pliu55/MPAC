@@ -32,7 +32,6 @@ Imports:
     BiocSingular (>= 1.10.0),
     S4Vectors (>= 0.32.3),
     SingleCellExperiment (>= 1.16.0),
-    SummarizedExperiment (>= 1.24.0),
     bluster (>= 1.4.0),
     fgsea (>= 1.20.0),
     scran (>= 1.22.1),
