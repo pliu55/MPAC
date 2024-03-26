@@ -44,7 +44,7 @@ Start __R__ and enter:
 devtools::install_github('pliu55/MPAC')
 ```
 
-### From Bioconductor
+### From Bioconductor -- NOT READY YET, UNDER REVIEW AT BIOCONDUCTOR
 
 Start __R__ and enter:
 
