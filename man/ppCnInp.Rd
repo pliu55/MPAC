@@ -11,7 +11,7 @@ ppCnInp(cn_tumor_mat)
 and columns as samples}
 }
 \value{
-A matrix of CN state for PARADIGM
+A SummarizedExperiment object of CN state for PARADIGM
 }
 \description{
 Prepare input copy-number (CN) alteration data to run PARADIGM

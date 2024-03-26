@@ -4,37 +4,30 @@
 \alias{ppPermInp}
 \title{Permute input genomic state data between genes in the same sample}
 \usage{
-ppPermInp(real_cn_mat, real_rna_mat, n_perms=3, threads=1)
+ppPermInp(real_se, n_perms=3, threads=1)
 }
 \arguments{
-\item{real_cn_mat}{A matrix of CNA states from real samples with rows as
-genes and columns as samples. It is the output from
-\code{ppCnInp()}.}
-
-\item{real_rna_mat}{A matrix of RNA state from real samples with rows as
-genes and columns as samples. It is the output from
-\code{ppRnaInp()}.}
+\item{real_se}{A SummarizedExperiment object of CN and RNA states from
+real samples with rows as genes and columns as samples.
+It is the output from \code{ppRealInp()}.}
 
 \item{n_perms}{Number of permutations. Default: 3}
 
 \item{threads}{Number of threads to run in parallel. Default: 1}
 }
 \value{
-A list of list of matrix. The top level is by permutation index and
-the next level saves permutation index, CNA matrix, RNA matrix. A
-matrix contains permuted CNA or RNA states as the input for
-PARADIGM.
+A list of SummarizedExperiment objects of permuted CN and RNA
+states. The metadata \code{i} in each obbect denotes its permutation
+index.
 }
 \description{
 Permute input genomic state data between genes in the same sample
 }
 \examples{
 
-fcn  = system.file('extdata/TcgaInp/inp_focal.rds',       package='MPAC')
-frna = system.file('extdata/TcgaInp/inp_log10fpkmP1.rds', package='MPAC')
-real_cn_mat  = readRDS(fcn)
-real_rna_mat = readRDS(frna)
+freal = system.file('extdata/TcgaInp/inp_real.rds', package='MPAC')
+real_se = readRDS(freal)
 
-ppPermInp(real_cn_mat, real_rna_mat, n_perms=3)
+ppPermInp(real_se, n_perms=3)
 
 }
