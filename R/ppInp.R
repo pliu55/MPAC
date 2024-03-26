@@ -1,9 +1,45 @@
+#' @title Prepare input copy-number (CN) alteration and RNA data to run PARADIGM
+#'
+#' @inheritParams ppCnInp
+#' @inheritParams ppRnaInp
+#'
+#' @return  A SummarizedExperiment object of CN and RNA state for PARADIGM
+#'
+#' @export
+#'
+#' @examples
+#'
+#' fcn = system.file('extdata/TcgaInp/focal_tumor.rds', package='MPAC')
+#' ftumor = system.file('extdata/TcgaInp/log10fpkmP1_tumor.rds', package='MPAC')
+#' fnorm = system.file('extdata/TcgaInp/log10fpkmP1_normal.rds', package='MPAC')
+#'
+#' cn_tumor_mat = readRDS(fcn)
+#' rna_tumor_mat = readRDS(ftumor)
+#' rna_norm_mat  = readRDS(fnorm)
+#'
+#' ppRealInp(cn_tumor_mat, rna_tumor_mat, rna_norm_mat)
+#'
+#' @importFrom SummarizedExperiment assays assays<-
+#'
+ppRealInp <- function(cn_tumor_mat, rna_tumor_mat, rna_normal_mat, threads=1) {
+    cn_se <- ppCnInp(cn_tumor_mat)
+    rna_se <- ppRnaInp(rna_tumor_mat, rna_normal_mat, threads=threads)
+
+    out_rownames <- intersect(rownames(cn_se), rownames(rna_se))
+    out_colnames <- intersect(colnames(cn_se), colnames(rna_se))
+    real_se <- cn_se[out_rownames, out_colnames] |> copy()
+    assays(real_se)$RNA_state <-
+        assays(rna_se)$RNA_state[out_rownames, out_colnames]
+
+    return(real_se)
+}
+
 #' @title Prepare input copy-number (CN) alteration data to run PARADIGM
 #'
 #' @param cn_tumor_mat  A matrix of tumor CN focal data with rows as genes 
 #'                      and columns as samples 
 #'
-#' @return  A matrix of CN state for PARADIGM
+#' @return  A SummarizedExperiment object of CN state for PARADIGM
 #'
 #' @export
 #'
@@ -14,10 +50,11 @@
 #'
 #' ppCnInp(cn_tumor_mat)
 #'
-#' @importFrom magrittr %>%
+#' @importFrom SummarizedExperiment SummarizedExperiment assays
 #'
 ppCnInp <- function(cn_tumor_mat) {
-    sign(cn_tumor_mat) %>% return()
+    cn_state_mat <- sign(cn_tumor_mat) 
+    SummarizedExperiment(assays=list(CN_state=cn_state_mat))
 }
 
 
@@ -31,7 +68,7 @@ ppCnInp <- function(cn_tumor_mat) {
 #'
 #' @param threads  Number of threads to run in parallel. Default: 1
 #'
-#' @return A matrix of RNA state for PARADIGM
+#' @return A SummarizedExperiment of RNA state for PARADIGM
 #'
 #' @export
 #'
@@ -44,34 +81,33 @@ ppCnInp <- function(cn_tumor_mat) {
 #'
 #' ppRnaInp(rna_tumor_mat, rna_norm_mat, threads=2)
 #'
-#' @import data.table
-#' @import magrittr
+#' @importFrom SummarizedExperiment SummarizedExperiment assays
 #' @importFrom BiocParallel  SnowParam bplapply
 #'
 ppRnaInp <- function(rna_tumor_mat, rna_normal_mat, threads=1) {
-    . <- NULL
+    out_mat <- getBPPARAM(threads) |>
+        bplapply(rownames(rna_normal_mat), fitByGn, rna_normal_mat, BPPARAM=_)|>
+        rbindlist() |>
+        defState(rna_tumor_mat)
 
-    getBPPARAM(threads) %>%
-    bplapply(rownames(rna_normal_mat), fitByGn, rna_normal_mat, BPPARAM=.) %>% 
-    rbindlist() %>%
-    defState(rna_tumor_mat) %>% 
-    return()
+    SummarizedExperiment(assays=list(RNA_state=out_mat))
 }
 
+#' @import data.table
+#'
 defState <- function(fitdt, tumor_mat) {
-    norm_mean <- norm_sd <- m_m_2sd <- m_p_2sd <- val <- state <- . <- NULL
+    norm_mean <- norm_sd <- m_m_2sd <- m_p_2sd <- val <- state <- NULL
     fitdt[, `:=`(
         m_m_2sd = norm_mean - 2 * norm_sd,
         m_p_2sd = norm_mean + 2 * norm_sd)]
 
-    t(tumor_mat) %>% as.data.table(keep.rownames='brc') %>%
-    melt(id='brc', variable='gnname', value='val') %>%
-    merge(fitdt, by='gnname', all.x=TRUE) %>%
-    .[, state := ifelse(val < m_m_2sd, -1, ifelse(val > m_p_2sd, 1, 0))] %>%
-    dcast(brc ~ gnname, value.var='state') %>%
-    .[, c('brc', fitdt$gnname), with=FALSE] %>%
-    as.matrix(rownames='brc') %>% t() %>%
-    return()
+    t(tumor_mat) |> as.data.table(keep.rownames='brc') |>
+    melt(id='brc', variable='gnname', value='val') |>
+    merge(fitdt, by='gnname', all.x=TRUE) |>
+    _[, state := ifelse(val < m_m_2sd, -1, ifelse(val > m_p_2sd, 1, 0))] |>
+    dcast(brc ~ gnname, value.var='state') |>
+    _[, c('brc', fitdt$gnname), with=FALSE] |>
+    as.matrix(rownames='brc') |> t() 
 }
 
 #' @importFrom fitdistrplus mgedist
@@ -95,62 +131,47 @@ fitByGn <- function(gnname, mat) {
 
 #' @title Permute input genomic state data between genes in the same sample
 #'
-#' @param real_cn_mat  A matrix of CNA states from real samples with rows as
-#'                     genes and columns as samples. It is the output from 
-#'                     `ppCnInp()`.
-#'
-#' @param real_rna_mat  A matrix of RNA state from real samples with rows as 
-#'                      genes and columns as samples. It is the output from 
-#'                      `ppRnaInp()`.
+#' @param real_se  A SummarizedExperiment object of CN and RNA states from 
+#'                 real samples with rows as genes and columns as samples. 
+#'                 It is the output from `ppRealInp()`.
 #'
 #' @param n_perms  Number of permutations. Default: 3
 #'
 #' @inheritParams ppRnaInp
 #'
-#' @usage ppPermInp(real_cn_mat, real_rna_mat, n_perms=3, threads=1)
+#' @usage ppPermInp(real_se, n_perms=3, threads=1)
 #'
-#' @return  A list of list of matrix. The top level is by permutation index and
-#'          the next level saves permutation index, CNA matrix, RNA matrix. A 
-#'          matrix contains permuted CNA or RNA states as the input for 
-#'          PARADIGM.
+#' @return  A list of SummarizedExperiment objects of permuted CN and RNA 
+#'          states. The metadata `i` in each obbect denotes its permutation 
+#'          index.
 #'
 #' @export
 #' 
 #' @examples
 #'
-#' fcn  = system.file('extdata/TcgaInp/inp_focal.rds',       package='MPAC')
-#' frna = system.file('extdata/TcgaInp/inp_log10fpkmP1.rds', package='MPAC')
-#' real_cn_mat  = readRDS(fcn)
-#' real_rna_mat = readRDS(frna)
+#' freal = system.file('extdata/TcgaInp/inp_real.rds', package='MPAC')
+#' real_se = readRDS(freal)
 #'
-#' ppPermInp(real_cn_mat, real_rna_mat, n_perms=3)
+#' ppPermInp(real_se, n_perms=3)
 #'
-ppPermInp <- function(real_cn_mat, real_rna_mat, n_perms=3, threads=1) {
-    . <- NULL
-
-    in_cnvmat <- t(real_cn_mat)
-    in_rnamat <- t(real_rna_mat)
-
-    ngns <- ncol(in_cnvmat)
-
+ppPermInp <- function(real_se, n_perms=3, threads=1) {
+    ngns <- nrow(real_se)
     permlist <- lapply(seq_len(n_perms), 
         function(x) sample(ngns, ngns, replace=FALSE))
 
-    getBPPARAM(threads) %>%
-    bplapply(seq_len(n_perms), ppByIPerm, permlist, in_cnvmat, in_rnamat,
-        BPPARAM=.) %>%
-    return()
+    getBPPARAM(threads) |>
+    bplapply(seq_len(n_perms), ppByIPerm, permlist, real_se, BPPARAM=_)
 }
 
-#' @importFrom magrittr %>%
 #'
-ppByIPerm <- function(iperm, permlist, in_cnvmat, in_rnamat) {
+#' @importFrom S4Vectors metadata metadata<-
+#'
+ppByIPerm <- function(iperm, permlist, real_se) {
     perms <- permlist[[iperm]]
 
-    cnvmat <- in_cnvmat[, perms]
-    rnamat <- in_rnamat[, perms]
+    perm_se <- real_se[perms, ]
+    rownames(perm_se) <- rownames(real_se)
+    metadata(perm_se)$i <- iperm
 
-    colnames(cnvmat) <- colnames(in_cnvmat)
-    colnames(rnamat) <- colnames(in_rnamat)
-    list(iperm=iperm, CN=t(cnvmat), RNA=t(rnamat)) %>% return()
+    return(perm_se)
 }
