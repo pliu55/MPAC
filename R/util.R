@@ -1,4 +1,3 @@
-#' @import magrittr
 #' @importFrom BiocParallel SnowParam MulticoreParam
 #'
 getBPPARAM <- function(threads) {
@@ -42,27 +41,27 @@ getOS <- function() {
 #'
 #' @importFrom utils download.file
 #'
-dlParadigmBin <- function() {
-    os <- getOS()
-    
-    ## to get $url, right-click the 'raw' button on Github file page
-    url <- 'https://github.com/sng87/paradigm-scripts/raw/master/public/exe/'
-    if ( os == 'LINUX' ) {
-        url <- paste0(url, 'LINUX/paradigm')
-    } else if ( os == 'OSX' ) {
-        url <- paste0(url, 'MACOS/paradigm')
-    }
-    flocal <- paste0(tempdir(), '/paradigm')
+#dlParadigmBin <- function() {
+#   os <- getOS()
+#   
+#   ## to get $url, right-click the 'raw' button on Github file page
+#   url <- 'https://github.com/sng87/paradigm-scripts/raw/master/public/exe/'
+#   if ( os == 'LINUX' ) {
+#       url <- paste0(url, 'LINUX/paradigm')
+#   } else if ( os == 'OSX' ) {
+#       url <- paste0(url, 'MACOS/paradigm')
+#   }
+#   flocal <- paste0(tempdir(), '/paradigm')
 
-    ## wget --no-check-certificate
-    ## curl -LJ $url
-    if ( ! file.exists(flocal) ) {
-        download.file(url, flocal, method='curl', extra='-LJ')
-    }
-    Sys.chmod(flocal, mode='755')
+#   ## wget --no-check-certificate
+#   ## curl -LJ $url
+#   if ( ! file.exists(flocal) ) {
+#       download.file(url, flocal, method='curl', extra='-LJ')
+#   }
+#   Sys.chmod(flocal, mode='755')
 
-    return(flocal)
-}
+#   return(flocal)
+#}
 
 ## file.exists cannot give T/F for character(0)
 fileExists <- function(f) {
@@ -75,17 +74,17 @@ fileExists <- function(f) {
 getNodeEdge <- function(fpth) {
     . <- entity <- type <- from <- to <- title <- NULL
 
-    wordslist <- readLines(fpth) %>% strsplit("\t")
+    wordslist <- readLines(fpth) |> strsplit("\t")
 
     nodedt <- lapply(wordslist, function(words) {
-        if (length(words) == 2) as.list(words) %>% return()
-    }) %>% rbindlist() %>% setnames( c('type', 'entity') ) %>% 
-    .[, .(entity, type)]
+        if (length(words) == 2) as.list(words)
+    }) |> rbindlist() |> setnames( c('type', 'entity') ) |>
+    _[, .(entity, type)]
 
     edgedt <- lapply(wordslist, function(words) {
-        if (length(words) == 3) as.list(words) %>% return()
-    }) %>% rbindlist() %>% setnames( c('from', 'to', 'title') ) %>%
-    .[, .(from, to, title)]
+        if (length(words) == 3) as.list(words)
+    }) |> rbindlist() |> setnames( c('from', 'to', 'title') ) |>
+    _[, .(from, to, title)]
 
-    list(nodedt=nodedt, edgedt=edgedt) %>% return()
+    list(nodedt=nodedt, edgedt=edgedt)
 }
