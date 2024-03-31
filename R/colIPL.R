@@ -19,7 +19,7 @@
 #' colRealIPL(indir)
 #'
 colRealIPL <- function(indir, sampleids=NULL) {
-    colIPL(indir, sampleids) %>% return()
+    colIPL(indir, sampleids)
 }
 
 #' @title  Collect Inferred Pathway Levels (IPLs) from PARADIGM runs on permuted
@@ -42,16 +42,12 @@ colRealIPL <- function(indir, sampleids=NULL) {
 #' colPermIPL(indir, n_perms)
 #'
 colPermIPL <- function(indir, n_perms, sampleids=NULL) {
-    . <- NULL
-
     lapply(seq_len(n_perms), function(iperm) {
-        ipldt <- paste0(indir, '/p', iperm, '/') %>% colIPL(sampleids)
-        brcs <- names(ipldt) %>% setdiff('entity')
-        ipldt[, iperm := iperm] %>%
-        .[, c('entity', 'iperm', brcs), with=FALSE] %>%
-        return()
-    }) %>% rbindlist() %>%
-    return()
+        ipldt <- paste0(indir, '/p', iperm, '/') |> colIPL(sampleids)
+        brcs <- names(ipldt) |> setdiff('entity')
+        ipldt[, iperm := iperm] |>
+        _[, c('entity', 'iperm', brcs), with=FALSE]
+    }) |> rbindlist()
 }
 
 colIPL <- function(indir, sampleids) {
@@ -63,26 +59,23 @@ colIPL <- function(indir, sampleids) {
         fipls <- paste0(indir, '/', sampleids, '_ipl.txt')
     }
 
-    . <- sampleid <- fipl <- NULL
-    fdt <- data.table(fipl = fipls) %>%
-        .[, sampleid := basename(fipl) %>% tstrsplit('_ipl.txt') %$% .[[1]] ]
+    sampleid <- fipl <- NULL
+    fdt <- data.table(fipl = fipls) |>
+        _[, sampleid := basename(fipl) |> tstrsplit('_ipl.txt') |> _[[1]] ]
 
     Map(function(fin, sampleid) {
-        readIPL(fin) %>% .[, sampleid := sampleid] %>% return()
-    }, fdt$fipl, fdt$sampleid) %>% rbindlist() %>%
-    dcast(entity ~ sampleid, value.var='ipl') %>%
-    return()
+        readIPL(fin) |> _[, sampleid := sampleid]
+    }, fdt$fipl, fdt$sampleid) |> rbindlist() |>
+    dcast(entity ~ sampleid, value.var='ipl')
 }
 
 readIPL <- function(fin) {
-    readLines(fin) %>%
+    readLines(fin) |>
     lapply(function(line) {
         if ((! grepl('^> ',     line, perl=TRUE)) &
             (! grepl('__\\d\t', line, perl=TRUE)) ) {
             words <- strsplit(line, "\t")[[1]]
-            list(entity=words[1], ipl=as.numeric(words[2])) %>%
-            return()
+            list(entity=words[1], ipl=as.numeric(words[2]))
         }
-    }) %>% rbindlist() %>%
-    return()
+    }) |> rbindlist()
 }
