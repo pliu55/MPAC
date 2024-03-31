@@ -39,7 +39,6 @@
 #' @importFrom BiocParallel bplapply
 #'
 clSamp <- function(ovrmat, n_neighbors=10, n_random_runs=100, threads=1) {
-    . <- NULL
     n_top_hvgs <- 100
 
     ovrmat <- ovrmat[, sort(colnames(ovrmat))]
@@ -63,13 +62,12 @@ clSamp <- function(ovrmat, n_neighbors=10, n_random_runs=100, threads=1) {
     pats <- colnames(sce)
 
     cldt <- bplapply(seq_len(n_random_runs), function(irep) {
-        clusterCells(sce, use.dimred='PCA', BLUSPARAM=ngp) %>% as.integer() %>%
-        data.table(irep=irep, pat=pats, icl=.) %>% return()
-    }, BPPARAM=bp) %>% rbindlist() %>%
+        clusterCells(sce, use.dimred='PCA', BLUSPARAM=ngp) |> as.integer() |>
+        data.table(irep=irep, pat=pats, icl=_)
+    }, BPPARAM=bp) |> rbindlist() |>
     dcast(irep ~ pat, value.var='icl')
 
     nreps <- NULL
-    cldt[, list(nreps = .N), by=pats] %>%
-    .[, c('nreps', pats), with=FALSE] %>% .[order(-nreps)] %>%
-    return()
+    cldt[, list(nreps = .N), by=pats] |>
+    _[, c('nreps', pats), with=FALSE] |> _[order(-nreps)]
 }
