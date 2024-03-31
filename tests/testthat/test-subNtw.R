@@ -1,5 +1,3 @@
-require(magrittr)
-
 main <- function() {
     testSubNtw()
 }
@@ -11,7 +9,7 @@ testSubNtw <- function() {
 
     fltdt = readRDS(fflt)
     outl = subNtw(fltdt, fpth, fgmt, min_n_gmt_gns=1)
-    cmpl = system.file('extdata/subNtw/subntwl.rds', package='MPAC') %>% 
+    cmpl = system.file('extdata/subNtw/subntwl.rds', package='MPAC') |> 
            readRDS()
 
     lapply(names(outl), cmpSubNtwByPat, outl, cmpl)
@@ -19,7 +17,7 @@ testSubNtw <- function() {
 
 cmpSubNtwByPat <- function(pat, outl, cmpl) {
     test_that('testSubNtw', {
-        igraph::identical_graphs(outl[[pat]], cmpl[[pat]]) %>% 
+        igraph::identical_graphs(outl[[pat]], cmpl[[pat]]) |> 
         expect_identical(TRUE)
     })
 }

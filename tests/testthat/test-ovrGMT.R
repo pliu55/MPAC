@@ -1,5 +1,3 @@
-require(magrittr)
-
 main <- function() {
     testOvrGMT()
 }
@@ -11,7 +9,7 @@ testOvrGMT <- function() {
     fcmp   = system.file('extdata/ovrGMT/ovr.rds',        package='MPAC')
 
     subntwl = readRDS(fntw)
-    omic_gns = readRDS(ffocal) %>% rownames()
+    omic_gns = readRDS(ffocal) |> rownames()
 
     outmat = ovrGMT(subntwl, fgmt, omic_gns)
     cmpmat = readRDS(fcmp)

@@ -1,5 +1,3 @@
-require(magrittr)
-
 main <- function() {
     testColRealIPL()
 
@@ -13,7 +11,7 @@ testColRealIPL <- function() {
     out_alldt = colRealIPL(indir, sampleids=NULL)
     out_patdt = colRealIPL(indir, sampleids=c(pat))
 
-    cmpdt = system.file('/extdata/colIPL/real.rds', package='MPAC') %>%readRDS()
+    cmpdt = system.file('/extdata/colIPL/real.rds', package='MPAC') |> readRDS()
     testColIPL('testColRealIPLAll', out_alldt, cmpdt)
     testColIPL('testColRealIPLPat', out_patdt, cmpdt)
 }
@@ -26,7 +24,7 @@ testColPermIPL <- function() {
     out_alldt = colPermIPL(indir, n_perms, sampleids=NULL)
     out_patdt = colPermIPL(indir, n_perms, sampleids=c(pat))
 
-    cmpdt = system.file('/extdata/colIPL/perm.rds', package='MPAC') %>%readRDS()
+    cmpdt = system.file('/extdata/colIPL/perm.rds', package='MPAC') |> readRDS()
     testColIPL('testColRealIPLAll', out_alldt, cmpdt)
     testColIPL('testColRealIPLPat', out_patdt, cmpdt)
 }

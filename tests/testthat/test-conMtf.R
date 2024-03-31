@@ -1,5 +1,3 @@
-require(magrittr)
-
 main <- function() {
     testConMtf()
 }
@@ -9,11 +7,11 @@ testConMtf <- function() {
     subntwl = readRDS(fin)
 
     ffocal = system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC')
-    omic_gns = readRDS(ffocal) %>% rownames()
+    omic_gns = readRDS(ffocal) |> rownames()
 
     outl = conMtf(subntwl, omic_gns, min_mtf_n_nodes=50)
 
-    cmpl = system.file('extdata/conMtf/con_grph.rds', package='MPAC') %>% 
+    cmpl = system.file('extdata/conMtf/con_grph.rds', package='MPAC') |> 
            readRDS()
 
     lapply(seq_len(length(outl)), testConMtfByIndi, outl, cmpl)
@@ -21,7 +19,7 @@ testConMtf <- function() {
 
 testConMtfByIndi <- function(ind, outl, cmpl) {
     test_that(paste0('testConMtf: ', ind), {
-        igraph::identical_graphs(outl[[ind]], cmpl[[ind]]) %>% 
+        igraph::identical_graphs(outl[[ind]], cmpl[[ind]]) |> 
         expect_identical(TRUE)
     })
 }

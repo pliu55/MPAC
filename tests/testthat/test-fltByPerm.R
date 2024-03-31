@@ -1,18 +1,16 @@
-require(magrittr)
-
 main <- function() {
     testFltByPerm()
 }
 
 testFltByPerm <- function() {
-    realdt = system.file('extdata/fltByPerm/real.rds', package='MPAC') %>% 
+    realdt = system.file('extdata/fltByPerm/real.rds', package='MPAC') |> 
              readRDS()
-    permdt = system.file('extdata/fltByPerm/perm.rds', package='MPAC') %>%
+    permdt = system.file('extdata/fltByPerm/perm.rds', package='MPAC') |>
              readRDS()
 
     outmat = fltByPerm(realdt, permdt)
 
-    cmpmat = system.file('extdata/fltByPerm/flt_real.rds', package='MPAC') %>%
+    cmpmat = system.file('extdata/fltByPerm/flt_real.rds', package='MPAC') |>
              readRDS()
 
     test_that('testFltByPerm', {
