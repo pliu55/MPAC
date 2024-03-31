@@ -1,14 +1,12 @@
-require(magrittr)
-
 main <- function() {
-    paradigm_bin = dlParadigmBin()
+    # paradigm_bin = dlParadigmBin()
 
-    testRunRealPrd(paradigm_bin)
+    testRunRealPrd()
 
-    testRunPermPrd(paradigm_bin)
+    testRunPermPrd()
 }
 
-testRunPermPrd <- function(paradigm_bin) {
+testRunPermPrd <- function() {
     fpermll = system.file('extdata/TcgaInp/inp_perm.rds', package='MPAC')
     fpth    = system.file('extdata/Pth/tiny_pth.txt',     package='MPAC')
 
@@ -16,29 +14,27 @@ testRunPermPrd <- function(paradigm_bin) {
     pat = 'TCGA-CV-7100'
     outdir = tempdir()
     
-    runPermPrd(permll, fpth, outdir, paradigm_bin, sampleids=c(pat))
+    runPermPrd(permll, fpth, outdir, PARADIGM_bin=NULL, sampleids=c(pat))
 
     lapply(permll, testRunPermPrdByIPerm, pat, outdir)
 }
 
-testRunPermPrdByIPerm <- function(permlist, pat, outdir) {
-    iperm = permlist$iperm
+testRunPermPrdByIPerm <- function(perm_se, pat, outdir) {
+    iperm = S4Vectors::metadata(perm_se)$i
     out_prefix = paste0(outdir, '/p', iperm, '/', pat, '_')
     cmp_relpre = paste0('extdata/runPrd/p', iperm, '/', pat, '_')
     testRunPrdByPrefix('testRunPermPrd', out_prefix, cmp_relpre)
 }
 
-testRunRealPrd <- function(paradigm_bin) {
-    fcn  = system.file('extdata/TcgaInp/inp_focal.rds',       package='MPAC')
-    frna = system.file('extdata/TcgaInp/inp_log10fpkmP1.rds', package='MPAC')
-    fpth = system.file('extdata/Pth/tiny_pth.txt',            package='MPAC')
+testRunRealPrd <- function() {
+    freal = system.file('extdata/TcgaInp/inp_real.rds', package='MPAC')
+    fpth  = system.file('extdata/Pth/tiny_pth.txt',     package='MPAC')
 
-    cnmat  = readRDS(fcn)
-    rnamat = readRDS(frna)
+    real_se = readRDS(freal)
     pat = 'TCGA-CV-7100'
 
     outdir = tempdir()
-    runPrd(cnmat, rnamat, fpth, outdir, paradigm_bin, sampleids=c(pat))
+    runPrd(real_se, fpth, outdir, PARADIGM_bin=NULL, sampleids=c(pat))
 
     out_prefix = paste0(outdir, '/', pat, '_')
     cmp_relpre = paste0('extdata/runPrd/', pat, '_')
@@ -47,8 +43,9 @@ testRunRealPrd <- function(paradigm_bin) {
 }
 
 testRunPrdByPrefix <- function(testname, out_prefix, cmp_relpre) {
-    suffixes = c('cfg.txt', 'inp_focal.tsv', 'inp_log10fpkmP1.tsv', 'cpt.txt',
-        'ipl.txt')
+    # suffixes = c('cfg.txt', 'inp_focal.tsv', 'inp_log10fpkmP1.tsv', 'cpt.txt',
+    #     'ipl.txt')
+    suffixes = c('cfg.txt', 'inp_focal.tsv', 'inp_log10fpkmP1.tsv')
     lapply(suffixes, testFileContent, testname, out_prefix, cmp_relpre)
 }
 

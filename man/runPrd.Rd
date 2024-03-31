@@ -4,17 +4,12 @@
 \alias{runPrd}
 \title{Run PARADIGM on multi-omic data}
 \usage{
-runPrd(cn_state_mat, rna_state_mat, fpth, outdir, PARADIGM_bin=NULL, 
-    nohup_bin=NULL, sampleids=NULL, threads=1)
+runPrd(real_se, fpth, outdir, PARADIGM_bin=NULL, nohup_bin=NULL,
+    sampleids=NULL, threads=1)
 }
 \arguments{
-\item{cn_state_mat}{A matrix of PARADIGM CNA states with rows as genes and
-columns as samples. It is the same matrix as the output
-from \code{ppCnInp()}.}
-
-\item{rna_state_mat}{A matrix of PARADIGM RNA states with rows as genes and
-columns as samples. It is the same matrix as the output
-from \code{ppRnaInp()}.}
+\item{real_se}{A SummarizedExperiment object of PARADIGM CNA and RNA states.
+It is the same matrix as the output from \code{ppRealInp()}.}
 
 \item{fpth}{Name of a pathway file for PARADIGM.}
 
@@ -41,17 +36,14 @@ Run PARADIGM on multi-omic data
 }
 \examples{
 
-fcn  = system.file('extdata/TcgaInp/inp_focal.rds',       package='MPAC')
-frna = system.file('extdata/TcgaInp/inp_log10fpkmP1.rds', package='MPAC')
-cn_state_mat  = readRDS(fcn)
-rna_state_mat = readRDS(frna)
+freal = system.file('extdata/TcgaInp/inp_real.rds', package='MPAC')
+real_se  = readRDS(freal)
 
 fpth = system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
 outdir = tempdir()
 paradigm_bin = '/path/to/PARADIGM'  ## change to binary location
 
 # depends on external PARADIGM binary, do not run
-runPrd(cn_state_mat, rna_state_mat, fpth, outdir, paradigm_bin, 
-    sampleids=c('TCGA-CF-7100'))
+runPrd(real_se, fpth, outdir, paradigm_bin, sampleids=c('TCGA-CF-7100'))
 
 }
