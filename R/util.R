@@ -35,12 +35,12 @@ getOS <- function() {
     return(os)
 }
 
-#' @title  Download PARADIGM binary and return its location
-#'
-#' @return full path of downloaded PARADIGM binary
-#'
-#' @importFrom utils download.file
-#'
+#  @title  Download PARADIGM binary and return its location
+# 
+#  @return full path of downloaded PARADIGM binary
+# 
+#  @importFrom utils download.file
+# 
 #dlParadigmBin <- function() {
 #   os <- getOS()
 #   
@@ -64,11 +64,11 @@ getOS <- function() {
 #}
 
 ## file.exists cannot give T/F for character(0)
-fileExists <- function(f) {
-    is_existed <- ifelse( identical(f, character(0)), FALSE,
-        ifelse( ! file.exists(f), FALSE, TRUE))
-    return(is_existed)
-}
+#fileExists <- function(f) {
+#   is_existed <- ifelse( identical(f, character(0)), FALSE,
+#       ifelse( ! file.exists(f), FALSE, TRUE))
+#   return(is_existed)
+#}
 
 
 getNodeEdge <- function(fpth) {
