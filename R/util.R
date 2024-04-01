@@ -35,42 +35,6 @@ getOS <- function() {
     return(os)
 }
 
-#  @title  Download PARADIGM binary and return its location
-# 
-#  @return full path of downloaded PARADIGM binary
-# 
-#  @importFrom utils download.file
-# 
-#dlParadigmBin <- function() {
-#   os <- getOS()
-#   
-#   ## to get $url, right-click the 'raw' button on Github file page
-#   url <- 'https://github.com/sng87/paradigm-scripts/raw/master/public/exe/'
-#   if ( os == 'LINUX' ) {
-#       url <- paste0(url, 'LINUX/paradigm')
-#   } else if ( os == 'OSX' ) {
-#       url <- paste0(url, 'MACOS/paradigm')
-#   }
-#   flocal <- paste0(tempdir(), '/paradigm')
-
-#   ## wget --no-check-certificate
-#   ## curl -LJ $url
-#   if ( ! file.exists(flocal) ) {
-#       download.file(url, flocal, method='curl', extra='-LJ')
-#   }
-#   Sys.chmod(flocal, mode='755')
-
-#   return(flocal)
-#}
-
-## file.exists cannot give T/F for character(0)
-#fileExists <- function(f) {
-#   is_existed <- ifelse( identical(f, character(0)), FALSE,
-#       ifelse( ! file.exists(f), FALSE, TRUE))
-#   return(is_existed)
-#}
-
-
 getNodeEdge <- function(fpth) {
     . <- entity <- type <- from <- to <- title <- NULL
 
