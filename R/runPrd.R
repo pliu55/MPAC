@@ -45,19 +45,16 @@
 runPrd <- function(real_se, fpth, outdir, PARADIGM_bin=NULL,
     nohup_bin=NULL, sampleids=NULL, threads=1) {
 
-    prots = rownames(real_se) |> sort()
+    prots <- rownames(real_se) |> sort()
     cn_state_mat  <- assays(real_se)$CN_state  |> _[prots, ] |> t() 
     rna_state_mat <- assays(real_se)$RNA_state |> _[prots, ] |> t()
 
     # jntl <- findJntPatProt(cn_state_mat, rna_state_mat, fpth, sampleids)
     if ( ! file.exists(outdir)) dir.create(outdir, recursive=TRUE)
 
-    pats = rownames(cn_state_mat)
+    pats <- rownames(cn_state_mat)
     dummy <- bplapply(pats, runPrdByPat, cn_state_mat, rna_state_mat, fpth, 
         outdir, PARADIGM_bin, nohup_bin, BPPARAM=getBPPARAM(threads))
-
-    # lapply(pats, runPrdByPat, cn_state_mat, rna_state_mat, fpth, 
-    #     outdir, PARADIGM_bin, nohup_bin)
 }
 
 #' @title  Run PARADIGM on permuted data
@@ -99,27 +96,6 @@ runPermPrd <- function(perml, fpth, outdir, PARADIGM_bin=NULL, nohup_bin=NULL,
             threads)
     })
 }
-
-
-#findJntPatProt <- function(cn_state_mat, rna_state_mat, fpth, sampleids) {
-#   in_cnmat  <- t(cn_state_mat)
-#   in_rnamat <- t(rna_state_mat)
-
-#   lines <- readLines(fpth)
-#   pth_prots <- lines[grepl("^protein\t", lines, perl=TRUE)] |>
-#               tstrsplit("\t") |> _[[2]]
-
-#   pats <- intersect(rownames(in_cnmat), rownames(in_rnamat)) |>
-#           intersect(sampleids) |> sort()
-
-#   prots <- intersect(colnames(in_cnmat), colnames(in_rnamat)) |>
-#           intersect(pth_prots) |> sort()
-
-#   cnmat  <- in_cnmat[ pats, prots, drop=FALSE]
-#   rnamat <- in_rnamat[pats, prots, drop=FALSE]
-
-#   list(pats=pats, cn=cnmat, rna=rnamat)
-#}
 
 runPrdByPat <- function(pat, cnmat, rnamat, fpth, outdir, PARADIGM_bin,
     nohup_bin) {
