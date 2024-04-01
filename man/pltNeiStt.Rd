@@ -5,16 +5,11 @@
 \title{Plot a heatmap of pathway and omic states of a protein and its
 pathway neighbors}
 \usage{
-pltNeiStt(cn_state_mat, rna_state_mat, fltmat, fpth, protein)
+pltNeiStt(real_se, fltmat, fpth, protein)
 }
 \arguments{
-\item{cn_state_mat}{A matrix of PARADIGM CNA states with rows as genes and
-columns as samples. It is the same matrix as the output
-from \code{ppCnInp()}.}
-
-\item{rna_state_mat}{A matrix of PARADIGM RNA states with rows as genes and
-columns as samples. It is the same matrix as the output
-from \code{ppRnaInp()}.}
+\item{real_se}{A SummarizedExperiment object of PARADIGM CNA and RNA states.
+It is the same matrix as the output from \code{ppRealInp()}.}
 
 \item{fltmat}{A matrix contains filterd IPL with rows
 as 'entity' and column as samples. This is the output from
@@ -37,15 +32,13 @@ pathway neighbors
 
 fpth = system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
 
-fcn  = system.file('extdata/pltNeiStt/inp_focal.rds',       package='MPAC')
-frna = system.file('extdata/pltNeiStt/inp_log10fpkmP1.rds', package='MPAC')
-fflt = system.file('extdata/pltNeiStt/fltmat.rds',          package='MPAC')
+freal = system.file('extdata/pltNeiStt/inp_real.rds', package='MPAC')
+fflt  = system.file('extdata/pltNeiStt/fltmat.rds',   package='MPAC')
 
-cn_state_mat  = readRDS(fcn)
-rna_state_mat = readRDS(frna)
+real_se = readRDS(freal)
 fltmat = readRDS(fflt)
 protein = 'CD86'
 
-pltNeiStt(cn_state_mat, rna_state_mat, fltmat, fpth, protein)
+pltNeiStt(real_se, fltmat, fpth, protein)
 
 }

@@ -14,20 +14,21 @@
 #'
 #' fpth = system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
 #'
-#' fcn  = system.file('extdata/pltNeiStt/inp_focal.rds',       package='MPAC')
-#' frna = system.file('extdata/pltNeiStt/inp_log10fpkmP1.rds', package='MPAC')
-#' fflt = system.file('extdata/pltNeiStt/fltmat.rds',          package='MPAC')
+#' freal = system.file('extdata/pltNeiStt/inp_real.rds', package='MPAC')
+#' fflt  = system.file('extdata/pltNeiStt/fltmat.rds',   package='MPAC')
 #'
-#' cn_state_mat  = readRDS(fcn)
-#' rna_state_mat = readRDS(frna)
+#' real_se = readRDS(freal)
 #' fltmat = readRDS(fflt)
 #' protein = 'CD86'
 #'
-#' pltNeiStt(cn_state_mat, rna_state_mat, fltmat, fpth, protein)
+#' pltNeiStt(real_se, fltmat, fpth, protein)
 #'
 #' @export
 #'
-pltNeiStt <- function(cn_state_mat, rna_state_mat, fltmat, fpth, protein) {
+pltNeiStt <- function(real_se, fltmat, fpth, protein) {
+    cn_state_mat  <- assays(real_se)$CN_state
+    rna_state_mat <- assays(real_se)$RNA_state
+
     nodedt <- ppNode4PltNeiStt(fpth, protein)
     pltmat <- ppMat4PltNeiStt(cn_state_mat, rna_state_mat, fltmat, nodedt)
 
@@ -80,7 +81,7 @@ makeHmNeiStt <- function(pltmat, nodedt) {
             labels      = c('activated', 'normal', 'repressed'),
             border      = 'black'
         )
-    ) %>% draw( heatmap_legend_side = 'bottom',
+    ) |> draw( heatmap_legend_side = 'bottom',
                 background = 'transparent' )
 }
 
