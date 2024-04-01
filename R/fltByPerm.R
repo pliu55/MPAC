@@ -41,7 +41,7 @@ fltByPat <- function(pat, in_realdt, in_permdt) {
     mad_vec    <- apply(perm_mat, 2, mad)
 
     perm_median <- perm_mad <- is_real <- med_m_3mad <- med_p_3mad <- NULL
-    real_ipl <- flt_real_ipl <- entity <- NULL
+    . <- real_ipl <- flt_real_ipl <- entity <- NULL
 
     maddt <- data.table( 
         entity      = names(mad_vec),
