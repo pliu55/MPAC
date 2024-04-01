@@ -3,22 +3,11 @@ title: 'MPAC: Multi-omic Pathway Analysis of Cancer'
 author: 'Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, and Anthony Gitter'
 date: '`r Sys.Date()`'
 output:
-    # rmarkdown::html_vignette:
-    #     toc: true
-    #     dev: svglite
-
     bookdown::html_document2:
         toc: true
         fig_caption: yes
         dev: svglite
         toc_float: true
-
-    # BiocStyle::html_document:
-    #     toc: true
-    #     toc_depth: 2
-    #     fig_caption: yes
-    #     dev: svglite
-    #     toc_float: true
 urlcolor: blue
 linkcolor: blue
 vignette: >
@@ -37,7 +26,6 @@ options( htmltools.dir.version = FALSE, formatR.indent = 2,
     warnPartialMatchDollar = FALSE, tinytex.verbose=TRUE)
 
 require(data.table)
-require(magrittr)
 
 require(MPAC)
 ```
@@ -80,11 +68,11 @@ For different versions of R, please refer to the appropriate
 # Required R packages for this vignette
 
 Please use the following code to load required packages for running this
-vignette.
+vignette. Many intermediate objects in this vignette are SummarizedExperiment
+objects.
 
 ```{r requiredPkg}
-require(data.table)
-require(magrittr)
+require(SummarizedExperiment)
 require(MPAC)
 ```
 
@@ -92,6 +80,7 @@ require(MPAC)
 
 - `ppCnInp()`: prepare CNA states from real CNA data
 - `ppRnaInp()`: prepare RNA states from read RNA-seq data
+- `ppRealInp()`: prepare CNA and RNA states from read CNA and RNA-seq data
 - `ppPermInp():` prepare permuted CNA and RNA states 
 - `runPrd()`: run PARADIGM to compute IPLs from real CNA and RNA states
 - `runPermPrd()`: run PARADIGM to compute IPLs from permuted CNA and RNA states
@@ -130,12 +119,12 @@ which can be downloaded from TCGA or taken from sequencing experiments.
 
 ```{r ppCnInp}
 # a matrix of CN focal data with rows as genes and columns as samples
-cn_tumor_mat = system.file('extdata/TcgaInp/focal_tumor.rds',
-                            package='MPAC') %>% readRDS()
+cn_tumor_mat <- system.file('extdata/TcgaInp/focal_tumor.rds',
+                            package='MPAC') |> readRDS()
 
-# to return a matrix of CN state for running PARADIGM
+# to return a SummarizedExperiment object of CNA state for running PARADIGM
 # activated, normal, or repressed state is represented by 1, 0, or -1
-ppCnInp(cn_tumor_mat) %>% .[1:4, 1:3]
+ppCnInp(cn_tumor_mat)
 ```
 
 ### RNA-seq
@@ -145,16 +134,30 @@ in tumor samples has activated, repressed, or normal states.
 
 ```{r ppRnaInp}
 # a matrix of RNA-seq data with rows as genes and columns as tumor samples
-rna_tumor_mat = system.file('extdata/TcgaInp/log10fpkmP1_tumor.rds',
-                            package='MPAC') %>% readRDS()
+rna_tumor_mat <- system.file('extdata/TcgaInp/log10fpkmP1_tumor.rds',
+                            package='MPAC') |> readRDS()
 
 # a matrix of RNA-seq data with rows as genes and columns as normal samples
-rna_norm_mat  = system.file('extdata/TcgaInp/log10fpkmP1_normal.rds',
-                            package='MPAC') %>% readRDS()
+rna_norm_mat  <- system.file('extdata/TcgaInp/log10fpkmP1_normal.rds',
+                            package='MPAC') |> readRDS()
 
-# to return a matrix of RNA state for running PARADIGM
+# to return a SummarizedExperiment object of RNA state for running PARADIGM
 # activated, normal, or repressed state is represented by 1, 0, or -1
-ppRnaInp(rna_tumor_mat, rna_norm_mat, threads=2) %>% .[1:4, 1:3]
+ppRnaInp(rna_tumor_mat, rna_norm_mat, threads=2)
+```
+
+### Copy-number alteration and RNA-seq
+
+Simply use a wrapper function below to prepare input together for both CNA
+and RNA data
+
+```{r ppRealInp}
+# to return a SummarizedExperiment object of CNA and RNA state 
+real_se <- ppRealInp(cn_tumor_mat, rna_tumor_mat, rna_norm_mat, threads=2)
+
+# CNA state is in assays(real_se)$CN_state
+# RNA state is in assays(real_se)$RNA_state
+real_se
 ```
 
 
@@ -162,35 +165,24 @@ ppRnaInp(rna_tumor_mat, rna_norm_mat, threads=2) %>% .[1:4, 1:3]
 
 Pathway activities from permuted data will be used to build a background 
 distribution to filter those from real data. The idea is to remove those that
-could be observed by chance. Permuted data were from real CN and RNA data as 
+could be observed by chance. Permuted data were from real CNA and RNA data as 
 shown in the example below.
 
 ```{r ppPermInp}
-# CN state from real samples. It should be the output from `ppCnInp()` above.
-real_cn_mat  = system.file('extdata/TcgaInp/inp_focal.rds',
-                            package='MPAC') %>% readRDS()
-
-# RNA state from real samples. It should be the output from `ppRnaInp()` above.
-real_rna_mat = system.file('extdata/TcgaInp/inp_log10fpkmP1.rds',
-                            package='MPAC') %>% readRDS()
-
 # to return a list of list
-permll = ppPermInp(real_cn_mat, real_rna_mat, n_perms=3)
+perml <- ppPermInp(real_se, n_perms=3)
 
 # three objects under the first level
-length(permll)
-
-# object names
-names(permll[[1]])
+length(perml)
 
 # permutation index
-permll[[1]]$iperm
+metadata(perml[[1]])$i
 
-# permuted CN  state matrix, same format as the one from `ppCnInp()`
-permll[[1]] %$% CN  %>% .[1:4, 1:3]
+# permuted CNA state matrix, same as the one from `ppCnInp()`
+assays(perml[[1]])$CN_state |> _[1:4, 1:3]
 
-# permuted RNA state matrix, same format as the one from `ppRnaInp()`
-permll[[1]] %$% RNA %>% .[1:4, 1:3]
+# permuted RNA state matrix, same as the one from `ppRnaInp()`
+assays(perml[[1]])$RNA_state |> _[1:4, 1:3]
 ```
 
 
@@ -224,27 +216,22 @@ the sample ID and a suffix indicating their types:
 - Other auxiliary files, which can be skipped under common usage
 
 ```{r runRealPrd}
-# CN state matrix from `ppCnInp()`
-cn_state_mat  = system.file('extdata/TcgaInp/inp_focal.rds',       
-                            package='MPAC') %>% readRDS()
-
-# RNA state matrix from `ppRnaInp()`
-rna_state_mat = system.file('extdata/TcgaInp/inp_log10fpkmP1.rds', 
-                            package='MPAC') %>% readRDS()
+# CNA and RNA state from `ppRealInp()`
+real_se <- system.file('extdata/TcgaInp/inp_real.rds', package='MPAC') |> 
+    readRDS()
 
 # Pathway file
-fpth = system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
+fpth <- system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
 
 # folder to save all the output files
-outdir = tempdir()
+outdir <- tempdir()
 
 # PARADIGM binary location. Replace the one below with a true location.
-paradigm_bin = '/path/to/PARADIGM'
+paradigm_bin <- '/path/to/PARADIGM'
 
 ### code below depends on external PARADIGM binary, not to run in this vignette.
 #
-#   runPrd(cn_state_mat, rna_state_mat, fpth, outdir, paradigm_bin, 
-#          sampleids=c('TCGA-CF-7100'))
+#   runPrd(real_se, fpth, outdir, paradigm_bin, sampleids=c('TCGA-CF-7100'))
 #
 ```
 
@@ -257,20 +244,20 @@ example, three permutations will generate folders `p1`, `p2`, and `p3`.
 
 ```{r runPermPrd}
 # a list of list from `ppPermInp()`
-permll =system.file('extdata/TcgaInp/inp_perm.rds', package='MPAC') %>%
-        readRDS()
+permll <- system.file('extdata/TcgaInp/inp_perm.rds', package='MPAC') |> 
+    readRDS()
 
 # Pathway file
-fpth = system.file('extdata/Pth/tiny_pth.txt',     package='MPAC')
+fpth <- system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
 
 # folder to save all the output files
-outdir = tempdir()
+outdir <- tempdir()
 
 # PARADIGM binary location. Replace the one below with a true location.
-paradigm_bin = '/path/to/PARADIGM'
+paradigm_bin <- '/path/to/PARADIGM'
 
 # (optional) sample IDs to run PARADIGM on
-pat = 'TCGA-CV-7100'
+pat <- 'TCGA-CV-7100'
 
 ### code below depends on external PARADIGM binary, not to run in this vignette.
 #
@@ -290,10 +277,10 @@ and put together for all samples.
 ```{r colRealIPL}
 # the folder saving PARADIGM result on real data
 # it should be the `outdir` folder from `runPrd()`
-indir = system.file('/extdata/runPrd/', package='MPAC')
+indir <- system.file('/extdata/runPrd/', package='MPAC')
 
 # to return a data.table with columns as entities and IPLs for each sample
-colRealIPL(indir) %>% head()
+colRealIPL(indir) |> head()
 ```
 
 ## From PARADIGM on permuted data
@@ -301,14 +288,14 @@ colRealIPL(indir) %>% head()
 ```{r colPermIPL}
 # the folder saving PARADIGM result on permuted data
 # it should be the `outdir` folder from `runPermPrd()`
-indir = system.file('/extdata/runPrd/', package='MPAC')
+indir <- system.file('/extdata/runPrd/', package='MPAC')
 
 # number of permutated dataset results to collect
-n_perms = 3
+n_perms <- 3
 
 # return a data.table with columns as entities, permutation index, and IPLs for
 # each sample
-colPermIPL(indir, n_perms) %>% head()
+colPermIPL(indir, n_perms) |> head()
 ```
 
 
@@ -320,14 +307,14 @@ those could be observed by chance.
 
 ```{r fltByPerm}
 # collected real IPLs. It is the output from `colRealIPL()`
-realdt = system.file('extdata/fltByPerm/real.rds', package='MPAC') %>% readRDS()
+realdt <- system.file('extdata/fltByPerm/real.rds', package='MPAC') |> readRDS()
 
 # collected permutation IPLs. It is the output from `colPermIPL()`
-permdt = system.file('extdata/fltByPerm/perm.rds', package='MPAC') %>% readRDS()
+permdt <- system.file('extdata/fltByPerm/perm.rds', package='MPAC') |> readRDS()
 
 # to return a matrix of filtered IPLs with rows as pathway entities and columns
 # as samples. Entities with IPLs observed by chance are set to NA.
-fltByPerm(realdt, permdt) %>% head()
+fltByPerm(realdt, permdt) |> head()
 ```
 
 # Find the largest pathway subset
@@ -341,15 +328,15 @@ sample-specific features.
 
 ```{r subNtw}
 # a matrix generated by `fltByPerm()`
-fltmat = system.file('extdata/fltByPerm/flt_real.rds', package='MPAC') %>%
+fltmat <- system.file('extdata/fltByPerm/flt_real.rds', package='MPAC') |>
         readRDS()
 
 # a pathway file
-fpth = system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
+fpth <- system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
 
 # a gene set file in MSigDB's GMT format. It should be the same file that will
 # be used in the over-representation analysis below.
-fgmt = system.file('extdata/ovrGMT/fake.gmt', package='MPAC')
+fgmt <- system.file('extdata/ovrGMT/fake.gmt', package='MPAC')
 
 # to return a list of igraph objects representing the larget sub-pathway for
 # each sample
@@ -364,14 +351,14 @@ the sub-pathway.
 
 ```{r ovrGMT}
 # a list of igraph objects from `subNtw()`
-subntwl = system.file('extdata/subNtw/subntwl.rds', package='MPAC') %>%readRDS()
+subntwl <- system.file('extdata/subNtw/subntwl.rds', package='MPAC') |>readRDS()
 
 # a gene set file that has been used in `subNtw()`
-fgmt = system.file('extdata/ovrGMT/fake.gmt',       package='MPAC')
+fgmt <- system.file('extdata/ovrGMT/fake.gmt',       package='MPAC')
 
 # (optional) genes that have CN and RNA data in the input files for PARADIGM
-omic_gns =  system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC') %>%
-            readRDS() %>% rownames()
+omic_gns <- system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC') |>
+            readRDS() |> rownames()
 
 # to return a matrix of over-representation adjusted p-values with rows as gene
 # set and columns as samples
@@ -392,7 +379,7 @@ random clustering jobs to run.
 
 ```{r clSamp}
 # a matrix of gene set over-representation adjusted p-values from `ovrGMT()`
-ovrmat = system.file('extdata/clSamp/ovrmat.rds', package='MPAC') %>% readRDS()
+ovrmat <- system.file('extdata/clSamp/ovrmat.rds', package='MPAC') |> readRDS()
 
 # to return a data.table of clustering result by 5 random runs:
 #
@@ -413,11 +400,11 @@ features. They often contain key proteins for further analysis.
 
 ```{r conMtf}
 # a list of igraph objects from `subNtw()`
-subntwl = system.file('extdata/conMtf/subntwl.rds', package='MPAC') %>%readRDS()
+subntwl <- system.file('extdata/conMtf/subntwl.rds', package='MPAC') |>readRDS()
 
 # (optional) genes that have CN and RNA data in the input files for PARADIGM
-omic_gns = system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC') %>%
-            readRDS() %>% rownames()
+omic_gns <- system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC') |>
+            readRDS() |> rownames()
 
 # to return a list of igraph objects representing consensus motifs
 conMtf(subntwl, omic_gns, min_mtf_n_nodes=50)
@@ -436,25 +423,21 @@ determinants of this protein.
 #|            neighbor's states."
 
 # protein of focus
-protein = 'CD86'
+protein <- 'CD86'
 
 # input pathway file
-fpth = system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
+fpth <- system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
 
-# CN state matrix from `ppCnInp()`
-cn_state_mat  = system.file('extdata/pltNeiStt/inp_focal.rds',       
-                            package='MPAC') %>% readRDS()
-
-# RNA state matrix from `ppRnaInp()`
-rna_state_mat = system.file('extdata/pltNeiStt/inp_log10fpkmP1.rds', 
-                            package='MPAC') %>% readRDS()
+# CNA and RNA state matrix from `ppRealInp()`
+real_se <- system.file('extdata/pltNeiStt/inp_real.rds', package='MPAC') |> 
+    readRDS()
 
 # filtered IPL matrix from `fltByPerm()`
-fltmat= system.file('extdata/pltNeiStt/fltmat.rds',          
-                    package='MPAC') %>% readRDS()
+fltmat <- system.file('extdata/pltNeiStt/fltmat.rds', package='MPAC') |> 
+            readRDS()
 
 # to plot heatmap
-pltNeiStt(cn_state_mat, rna_state_mat, fltmat, fpth, protein)
+pltNeiStt(real_se, fltmat, fpth, protein)
 ```
 
 # Session Info
