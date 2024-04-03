@@ -43,7 +43,7 @@ fpth = system.file('extdata/Pth/tiny_pth.txt', package='MPAC')
 outdir = tempdir()
 paradigm_bin = '/path/to/PARADIGM'  ## change to binary location
 
-# depends on external PARADIGM binary, do not run
-runPrd(real_se, fpth, outdir, paradigm_bin, sampleids=c('TCGA-CF-7100'))
+# depends on external PARADIGM binary
+runPrd(real_se, fpth, outdir, paradigm_bin, sampleids=c('TCGA-CV-7100'))
 
 }
