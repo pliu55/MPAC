@@ -257,10 +257,8 @@ paradigm_bin <- '/path/to/PARADIGM'
 # (optional) sample IDs to run PARADIGM on
 pat <- 'TCGA-CV-7100'
 
-### code below depends on external PARADIGM binary, not to run in this vignette.
-#
-#   runPermPrd(permll, fpth, outdir, paradigm_bin, sampleids=c(pat))
-#
+### code below depends on external PARADIGM binary
+runPermPrd(permll, fpth, outdir, paradigm_bin, sampleids=c(pat))
 ```
 
 
