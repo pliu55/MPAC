@@ -46,8 +46,10 @@ runPrd <- function(real_se, fpth, outdir, PARADIGM_bin=NULL,
     nohup_bin=NULL, sampleids=NULL, threads=1) {
 
     prots <- rownames(real_se) |> sort()
-    cn_state_mat  <- assays(real_se)$CN_state  |> _[prots, ] |> t() 
-    rna_state_mat <- assays(real_se)$RNA_state |> _[prots, ] |> t()
+    cn_state_mat  <- assays(real_se)$CN_state  |> 
+        _[prots, sampleids, drop=FALSE] |> t() 
+    rna_state_mat <- assays(real_se)$RNA_state |> 
+        _[prots, sampleids, drop=FALSE] |> t()
 
     # jntl <- findJntPatProt(cn_state_mat, rna_state_mat, fpth, sampleids)
     if ( ! file.exists(outdir)) dir.create(outdir, recursive=TRUE)
