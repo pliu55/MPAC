@@ -1,3 +1,6 @@
+require(data.table)
+suppressMessages(require(igraph))
+
 main <- function() {
     testConMtf()
 }
@@ -18,9 +21,18 @@ testConMtf <- function() {
 }
 
 testConMtfByIndi <- function(ind, outl, cmpl) {
-    test_that(paste0('testConMtf: ', ind), {
-        igraph::identical_graphs(outl[[ind]], cmpl[[ind]], attrs=FALSE) |> 
-        expect_identical(TRUE)
+    out = outl[[ind]]
+    cmp = cmpl[[ind]]
+
+    test_that('testConMtf: vertex', {
+        expect_identical( sort(V(out)$name), sort(V(cmp)$name) )
+    })
+
+    test_that('testConMtf: edge', {
+        expect_identical(
+            get.edgelist(out) |> as.data.table() |> _[order(V1, V2)],
+            get.edgelist(cmp) |> as.data.table() |> _[order(V1, V2)]
+        )
     })
 }
 

@@ -1,3 +1,4 @@
+require(data.table)
 suppressMessages(require(igraph))
 
 main <- function() {
@@ -18,9 +19,18 @@ testSubNtw <- function() {
 }
 
 cmpSubNtwByPat <- function(pat, outl, cmpl) {
-    test_that('testSubNtw', {
-        identical_graphs(outl[[pat]], cmpl[[pat]], attrs=FALSE) |> 
-        expect_identical(TRUE)
+    out = outl[[pat]]
+    cmp = cmpl[[pat]]
+
+    test_that('testSubNtw: vertex', {
+        expect_identical( sort(V(out)$name), sort(V(cmp)$name) )
+    })
+
+    test_that('testSubNtw: edge', {
+        expect_identical(
+            get.edgelist(out) |> as.data.table() |> _[order(V1, V2)],
+            get.edgelist(cmp) |> as.data.table() |> _[order(V1, V2)]
+        )
     })
 }
 
