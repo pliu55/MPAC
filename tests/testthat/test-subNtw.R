@@ -1,3 +1,5 @@
+suppressMessages(require(igraph))
+
 main <- function() {
     testSubNtw()
 }
@@ -17,7 +19,7 @@ testSubNtw <- function() {
 
 cmpSubNtwByPat <- function(pat, outl, cmpl) {
     test_that('testSubNtw', {
-        igraph::identical_graphs(outl[[pat]], cmpl[[pat]]) |> 
+        identical_graphs(outl[[pat]], cmpl[[pat]]) |> 
         expect_identical(TRUE)
     })
 }
