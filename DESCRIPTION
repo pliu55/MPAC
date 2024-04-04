@@ -1,6 +1,6 @@
 Package: MPAC
 Title: Multi-omic Pathway Analysis of Cancer
-Version: 0.99.4
+Version: 0.99.5
 Authors@R: c(
     person(given="Peng", family="Liu", email="wrk.smnr+bioconductor@gmail.com", 
            role = c("aut", "cre"), comment=c(ORCID="0000-0001-5655-2259")),
@@ -29,7 +29,7 @@ Imports:
     SummarizedExperiment (>= 1.30.2),
     BiocParallel (>= 1.28.3),
     fitdistrplus (>= 1.1),
-    igraph (>= 1.2.11),
+    igraph (>= 1.4.3),
     BiocSingular (>= 1.10.0),
     S4Vectors (>= 0.32.3),
     SingleCellExperiment (>= 1.16.0),
