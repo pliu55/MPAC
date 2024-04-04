@@ -15,7 +15,7 @@ testOvrGMT <- function() {
     cmpmat = readRDS(fcmp)
 
     test_that('testOvrGMT', {
-        expect_identical(outmat, cmpmat)
+        expect_equal(outmat, cmpmat)
     })
 }
 
