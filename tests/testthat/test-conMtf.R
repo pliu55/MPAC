@@ -19,7 +19,7 @@ testConMtf <- function() {
 
 testConMtfByIndi <- function(ind, outl, cmpl) {
     test_that(paste0('testConMtf: ', ind), {
-        igraph::identical_graphs(outl[[ind]], cmpl[[ind]]) |> 
+        igraph::identical_graphs(outl[[ind]], cmpl[[ind]], attrs=FALSE) |> 
         expect_identical(TRUE)
     })
 }

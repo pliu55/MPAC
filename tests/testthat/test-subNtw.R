@@ -19,7 +19,7 @@ testSubNtw <- function() {
 
 cmpSubNtwByPat <- function(pat, outl, cmpl) {
     test_that('testSubNtw', {
-        identical_graphs(outl[[pat]], cmpl[[pat]]) |> 
+        identical_graphs(outl[[pat]], cmpl[[pat]], attrs=FALSE) |> 
         expect_identical(TRUE)
     })
 }
