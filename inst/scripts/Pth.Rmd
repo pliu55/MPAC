@@ -1,0 +1,6 @@
+# tiny_pth.txt
+
+A tiny subset of the pathway network from 
+[the TCGA Pan-Cancer Atlas](https://doi.org/10.1016/j.cell.2018.03.022). It 
+focuses on proteins TYK2, IL12RB1, CD28, CD86, LCP2, CD247, and FASLG, 
+as well as entities connecting to them directly.

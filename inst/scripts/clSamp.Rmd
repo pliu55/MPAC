@@ -1,0 +1,21 @@
+# ovrmat.rds
+
+This file contains GO enrichment results for 18 TCGA-HNSC HPV+ patients. For 
+more details, please see this package's CITATION.
+
+Data in this file is an R matrix object with rows corresponding to 2085 GO terms
+and columns for the 18 patients. This matrix saves adjusted p-values for GO 
+enrichment.
+
+
+# clmat.rds
+
+```{r}
+outmat = system.file('extdata/clSamp/ovrmat.rds', package='MPAC') |> 
+         readRDS() |> MPAC::clSamp(n_neighbors=10, n_random_runs=5) |> 
+         _[order(-nreps)] |> as.matrix(rownames='nreps') |> _[1, ] |> t() |> t()
+
+colnames(outmat) = 'icl'
+
+outmat
+```

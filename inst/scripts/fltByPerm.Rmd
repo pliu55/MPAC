@@ -1,0 +1,29 @@
+# real.rds
+
+This file contains inferred pathway levels from _real_ copy-number and RNA 
+input. For more details, please see this package's CITATION.
+
+Data in this file is a data.table object with rows corresponding to 30 pathway
+entities and columns for entity's identity and inferred pathway levels for 
+patient TCGA-BA-5152 and TCGA-CV-7100.
+
+
+# perm.rds
+
+This file contains inferred pathway levels from _permuted_ copy-number and RNA
+input. For more details, please see this package's CITATION.
+
+Data in this file is a data.table object with rows corresponding to 30 pathway
+entities from 100 sets of permuted inputs. Columns are for entity's identity, 
+permutation index, and inferred pathway levels for patient TCGA-BA-5152 and 
+TCGA-CV-7100. 
+
+
+# flt_real.rds
+
+```{r}
+realdt = system.file('extdata/fltByPerm/real.rds', package='MPAC') |> readRDS()
+permdt = system.file('extdata/fltByPerm/perm.rds', package='MPAC') |> readRDS()
+
+MPAC::fltByPerm(realdt, permdt)
+```

@@ -1,0 +1,20 @@
+# fake.gmt
+
+A fake GMT file containing two gene sets:
+
+- a gene set named __CD_fake__ that contains genes CD28 and CD86
+- a gene set named __MI_fake__ that contains genes CD28 and LCP2
+
+
+# ovr.rds
+
+```{r}
+fntw   = system.file('extdata/subNtw/subntwl.rds',    package='MPAC')
+fgmt   = system.file('extdata/ovrGMT/fake.gmt',       package='MPAC')
+ffocal = system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC')
+
+subntwl  = readRDS(fntw)
+omic_gns = readRDS(ffocal) |> rownames()
+
+MPAC::ovrGMT(subntwl, fgmt, omic_gns)
+```

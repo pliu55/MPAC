@@ -1,0 +1,46 @@
+# Prediction on real data
+
+```{r}
+freal = system.file('extdata/TcgaInp/inp_real.rds', package='MPAC')
+fpth  = system.file('extdata/Pth/tiny_pth.txt',     package='MPAC')
+
+real_se = readRDS(freal)
+pat = 'TCGA-CV-7100'
+
+outdir   = '/output/folder/'
+PARADIGM = '/location/PARADIGM'
+MPAC::runPrd(real_se, fpth, outdir, PARADIGM_bin=PARADIGM, sampleids=c(pat))
+```
+
+The R code above will generate the following files in `outdir` (remember to 
+supply the location of PARADIGM above):
+
+- TCGA-CV-7100_cfg.txt
+- TCGA-CV-7100_cpt.txt
+- TCGA-CV-7100_inp_focal.tsv
+- TCGA-CV-7100_inp_log10fpkmP1.tsv
+- TCGA-CV-7100_ipl.txt
+
+
+# Prediction on permuted data
+
+```{r}
+fpermll = system.file('extdata/TcgaInp/inp_perm.rds', package='MPAC')
+fpth    = system.file('extdata/Pth/tiny_pth.txt',     package='MPAC')
+
+permll = readRDS(fpermll)
+pat = 'TCGA-CV-7100'
+
+outdir   = '/output/folder/'
+PARADIGM = '/location/PARADIGM'
+
+MPAC::runPermPrd(permll, fpth, outdir, PARADIGM_bin=PARADIGM, sampleids=c(pat))
+```
+
+The R code above will generate the same set of files as in __Prediction on 
+real data__. The output files will be in the following folders (again, remember
+to supply the location of PARADIGM when running prediction):
+
+- `outdir/p1/`
+- `outdir/p2/`
+- `outdir/p3/`

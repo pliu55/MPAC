@@ -1,0 +1,73 @@
+# Data downloaded from TCGA
+
+## focal_tumor.rds  
+
+This file contains gene-level copy-number scores of TCGA-HNSC HPV+ patients 
+samples downloaded from [NCI GDC Data Portal](https://portal.gdc.cancer.gov/) 
+version 29. 
+
+Data in this file is an R matrix object with rows for seven genes and columns 
+for 71 patients.
+
+## log10fpkmP1_normal.rds  
+
+This file contains RNA expression levels in $log_{10}(FPKM+1)$ of TCGA-HNSC 
+_normal_ samples downloaded from the same source as the copy-number data above. 
+
+Data in this file is an R matrix object with rows for the same seven genes as 
+copy-number data above and columns for 44 patients.
+
+## log10fpkmP1_tumor.rds
+
+This file contains RNA expression levels in $log_{10}(FPKM+1)$ of TCGA-HNSC 
+_primary tumor_ samples downloaded from the same source as the copy-number data 
+above. 
+
+Data in this file is an R matrix object with rows for seven genes and columns 
+for 71 patients. Both genes and patients are the same as the copy-number
+data above.
+
+
+# Data derived from the download data
+
+## inp_focal.rds
+
+```{r}
+system.file('extdata/TcgaInp/focal_tumor.rds', package='MPAC') |> readRDS() |> 
+MPAC::ppCnInp()
+```
+
+## inp_log10fpkmP1.rds    
+
+```{r}
+ftumor = system.file('extdata/TcgaInp/log10fpkmP1_tumor.rds',  package='MPAC')
+fnorm  = system.file('extdata/TcgaInp/log10fpkmP1_normal.rds', package='MPAC')
+
+tumor_mat = readRDS(ftumor)
+norm_mat  = readRDS(fnorm)
+
+MPAC::ppRnaInp(tumor_mat, norm_mat)
+```
+
+## inp_real.rds     
+
+```{r}
+fcn    = system.file('extdata/TcgaInp/focal_tumor.rds',        package='MPAC')
+ftumor = system.file('extdata/TcgaInp/log10fpkmP1_tumor.rds',  package='MPAC')
+fnorm  = system.file('extdata/TcgaInp/log10fpkmP1_normal.rds', package='MPAC')
+
+cn_tumor_mat  = readRDS(fcn)
+rna_tumor_mat = readRDS(ftumor)
+rna_norm_mat  = readRDS(fnorm)
+
+MPAC::ppRealInp(cn_tumor_mat, rna_tumor_mat, rna_norm_mat) 
+```
+
+## inp_perm.rds
+
+```{r}
+set.seed(123456)
+
+system.file('extdata/TcgaInp/inp_real.rds', package='MPAC') |> readRDS() |> 
+MPAC::ppPermInp(n_perms=3)
+```

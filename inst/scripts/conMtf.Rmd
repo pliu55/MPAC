@@ -1,0 +1,22 @@
+# subntwl.rds
+
+This file contains a subset of pathway network for two TCGA-HNSC HPV+ patients.
+For more details, please see this package's CITATION.
+
+Data in this file is a list of two igraph objects for patient TCGA-MZ-A5BI and
+TCGA-QK-A6IF, belonging to the 'immune response' group described in this 
+package's CITATION. Both objects contain the seven key proteins, CD28, CD86, 
+LCP2, IL12RB1, TYK2, CD247, and FASLG.
+
+
+# con_grph.rds
+
+```{r}
+subntwl = system.file('extdata/conMtf/subntwl.rds', package='MPAC') |> readRDS()
+
+suppressMessages(require(SummarizedExperiment))
+omic_gns = system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC') |>
+           readRDS() |> rownames()
+
+MPAC::conMtf(subntwl, omic_gns, min_mtf_n_nodes=50)
+```

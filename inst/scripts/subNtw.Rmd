@@ -1,0 +1,10 @@
+# subntwl.rds
+
+```{r}
+fflt = system.file('extdata/fltByPerm/flt_real.rds', package='MPAC')
+fpth = system.file('extdata/Pth/tiny_pth.txt',       package='MPAC')
+fgmt = system.file('extdata/ovrGMT/fake.gmt',        package='MPAC')
+
+fltdt = readRDS(fflt)
+MPAC::subNtw(fltdt, fpth, fgmt, min_n_gmt_gns=1)
+```

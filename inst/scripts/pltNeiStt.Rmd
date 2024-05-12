@@ -1,0 +1,20 @@
+# inp_real.rds
+
+This file contains the copy-number and RNA state for CD86 in the eleven 
+TCGA-HNSC HPV+ patients in the 'immune response' group. For more details, 
+please see this package's CITATION.
+
+Data in this file is a SummarizedExperiment object with one row for CD86 and 
+eleven columns for patient samples. It contains two assays for copy-number
+and RNA state.
+
+
+# fltmat.rds
+
+This file contains the inferred pathway levels for CD86 and its pathway 
+neighbors in the eleven TCGA-HNSC HPV+ patients in the 'immune response' 
+group. For more details, please see this package's CITATION.
+
+Data in this file is an R matrix object with seven rows for CD86 and its 
+directly connected pathway network neighbors. This matrix has eleven columns 
+for patient samples. Values in this matrix are inferred pathway levels.
