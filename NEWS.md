@@ -1,3 +1,8 @@
+# MPAC 0.99.10
+
+Added documentation in inst/scripts/ for the source and derivation of 
+inst/extdata/
+
 # MPAC 0.99.1
 
 - Used SummarizedExperiment objects for CNA and RNA matrix in functions:   
