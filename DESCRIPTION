@@ -1,6 +1,6 @@
 Package: MPAC
 Title: Multi-omic Pathway Analysis of Cancer
-Version: 0.99.10
+Version: 0.99.11
 Authors@R: c(
     person(given="Peng", family="Liu", 
            email="pliu55.wisc+bioconductor@gmail.com", 
