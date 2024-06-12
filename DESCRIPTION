@@ -2,7 +2,8 @@ Package: MPAC
 Title: Multi-omic Pathway Analysis of Cancer
 Version: 0.99.10
 Authors@R: c(
-    person(given="Peng", family="Liu", email="wrk.smnr+bioconductor@gmail.com", 
+    person(given="Peng", family="Liu", 
+           email="pliu55.wisc+bioconductor@gmail.com", 
            role = c("aut", "cre"), comment=c(ORCID="0000-0001-5655-2259")),
     person(given="Paul",    family="Ahlquist", role = c("aut")),
     person(given="Irene",   family="Ong",      role = c("aut")),
@@ -20,7 +21,7 @@ Description: Multi-omic Pathway Analysis of Cancer (MPAC), integrates
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: R (>= 4.4.0)
 URL: https://github.com/pliu55/MPAC
 BugReports: https://github.com/pliu55/MPAC/issues
@@ -37,6 +38,7 @@ Imports:
     fgsea (>= 1.20.0),
     scran (>= 1.22.1),
     ComplexHeatmap (>= 2.16.0),
+    bookdown(>= 0.34),
     grid,
     stats
 Suggests: 
