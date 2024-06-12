@@ -1,6 +1,6 @@
 Package: MPAC
 Title: Multi-omic Pathway Analysis of Cancer
-Version: 0.99.11
+Version: 0.99.12
 Authors@R: c(
     person(given="Peng", family="Liu", 
            email="pliu55.wisc+bioconductor@gmail.com", 
@@ -38,12 +38,12 @@ Imports:
     fgsea (>= 1.20.0),
     scran (>= 1.22.1),
     ComplexHeatmap (>= 2.16.0),
-    bookdown(>= 0.34),
     grid,
     stats
 Suggests: 
     rmarkdown,
     knitr,
+    bookdown(>= 0.34),
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
