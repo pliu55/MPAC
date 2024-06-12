@@ -1,6 +1,4 @@
-[![bioc](http://www.bioconductor.org/shields/years-in-bioc/MPAC.svg)](http://bioconductor.org/packages/MPAC)
-
-[![DOI](https://zenodo.org/badge/664257440.svg)](https://zenodo.org/doi/10.5281/zenodo.10805479)
+[![bioc](http://www.bioconductor.org/shields/years-in-bioc/MPAC.svg)](http://bioconductor.org/packages/MPAC) [![DOI](https://zenodo.org/badge/664257440.svg)](https://zenodo.org/doi/10.5281/zenodo.10805479)
 
 MPAC: inferring cancer pathway activities from multi-omic data
 ===========================================
