@@ -1,4 +1,4 @@
-![bioc](http://www.bioconductor.org/shields/years-in-bioc/MPAC.svg)](http://bioconductor.org/packages/devel/bioc/html/MPAC.html)
+![bioc](http://www.bioconductor.org/shields/years-in-bioc/MPAC.svg)](http://bioconductor.org/packages/MPAC)
 
 [![DOI](https://zenodo.org/badge/664257440.svg)](https://zenodo.org/doi/10.5281/zenodo.10805479)
 
@@ -42,7 +42,7 @@ Start __R__ and enter:
 devtools::install_github('pliu55/MPAC')
 ```
 
-### From Bioconductor -- NOT READY YET, UNDER REVIEW AT BIOCONDUCTOR
+### From Bioconductor
 
 Start __R__ and enter:
 
