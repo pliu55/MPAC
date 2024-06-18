@@ -24,7 +24,7 @@ Multi-omic Pathway Analysis of Cancer (__MPAC__) is an __R__ package that
 interprets multi-omic data through the prior knowledge of biological pathways.
 The workflow of MPAC contains several steps, which are shown in 
 the figure below.  MPAC has a
-[vignette TO UPDATE!!](https://bioconductor.org/packages/devel/bioc/vignettes/pram/inst/doc/pram.pdf) that describes each function in details.
+[vignette](https://bioconductor.org/packages/devel/bioc/vignettes/MPAC/inst/doc/MPAC.html) that describes each function in details.
 
 <p align='center'>
     <img src="vignettes/workflow.jpg" width="800">
@@ -47,6 +47,10 @@ Start __R__ and enter:
 ```r
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
+
+# The following initializes usage of Bioc devel
+BiocManager::install(version='devel')
+
 BiocManager::install("MPAC")
 ```
 
@@ -74,7 +78,7 @@ For details, please see the __Required external software__ section in vignette's
 
 ### Manuscript
 
-__MPAC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2024. __doi__: TO-UPDATE!!
+__MPAC: a computational framework for inferring cancer pathway activities from multi-omic data__. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. _bioRxiv_, 2024.06.15.599113. __doi__: [https://doi.org/10.1101/2024.06.15.599113](https://doi.org/10.1101/2024.06.15.599113)
 
 ## <a name="contact"></a> Contact
 
