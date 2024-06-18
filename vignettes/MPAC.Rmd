@@ -58,6 +58,10 @@ Start R and enter:
 ```{r installFromBioconductor, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
+
+# The following initializes usage of Bioc devel
+BiocManager::install(version='devel')
+
 BiocManager::install("MPAC")
 ```
 
