@@ -31,8 +31,8 @@ Plot a heatmap of over-represented gene sets for clsutered samples
 }
 \examples{
 
-ovrmat <- system.file('extdata/pltOvrHm/ovrmat.rds', package='MPAC')
-cldt   <- system.file('extdata/pltOvrHm/cldt.rds',   package='MPAC')
+ovrmat <- system.file('extdata/pltOvrHm/ovr.rds',package='MPAC') |> readRDS()
+cldt   <- system.file('extdata/pltOvrHm/cl.rds', package='MPAC') |> readRDS()
 
 pltOvrHm(ovrmat, cldt)
 
