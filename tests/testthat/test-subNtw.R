@@ -12,7 +12,7 @@ testSubNtw <- function() {
 
     fltdt = readRDS(fflt)
     outl = subNtw(fltdt, fpth, fgmt, min_n_gmt_gns=1)
-    cmpl = system.file('extdata/subNtw/subntwl.rds', package='MPAC') |> 
+    cmpl = system.file('extdata/subNtw/subntwl.rds', package='MPAC') |>
            readRDS()
 
     lapply(names(outl), cmpSubNtwByPat, outl, cmpl)
@@ -20,7 +20,7 @@ testSubNtw <- function() {
 
 cmpSubNtwByPat <- function(pat, outl, cmpl) {
     out = outl[[pat]]
-    cmp = cmpl[[pat]]
+    cmp = cmpl[[pat]] |> upgrade_graph()
 
     test_that('testSubNtw: vertex', {
         expect_identical( sort(V(out)$name), sort(V(cmp)$name) )
@@ -28,8 +28,8 @@ cmpSubNtwByPat <- function(pat, outl, cmpl) {
 
     test_that('testSubNtw: edge', {
         expect_identical(
-            get.edgelist(out) |> as.data.table() |> _[order(V1, V2)],
-            get.edgelist(cmp) |> as.data.table() |> _[order(V1, V2)]
+            as_edgelist(out) |> as.data.table() |> _[order(V1, V2)],
+            as_edgelist(cmp) |> as.data.table() |> _[order(V1, V2)]
         )
     })
 }

@@ -14,7 +14,7 @@ testConMtf <- function() {
 
     outl = conMtf(subntwl, omic_gns, min_mtf_n_nodes=50)
 
-    cmpl = system.file('extdata/conMtf/con_grph.rds', package='MPAC') |> 
+    cmpl = system.file('extdata/conMtf/con_grph.rds', package='MPAC') |>
            readRDS()
 
     lapply(seq_len(length(outl)), testConMtfByIndi, outl, cmpl)
@@ -30,8 +30,8 @@ testConMtfByIndi <- function(ind, outl, cmpl) {
 
     test_that('testConMtf: edge', {
         expect_identical(
-            get.edgelist(out) |> as.data.table() |> _[order(V1, V2)],
-            get.edgelist(cmp) |> as.data.table() |> _[order(V1, V2)]
+            as_edgelist(out) |> as.data.table() |> _[order(V1, V2)],
+            as_edgelist(cmp) |> as.data.table() |> _[order(V1, V2)]
         )
     })
 }
