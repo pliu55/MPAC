@@ -20,14 +20,16 @@
 #'
 #' @examples
 #'
-#' ovrmat <- system.file('extdata/pltOvrHm/ovrmat.rds', package='MPAC')
-#' cldt   <- system.file('extdata/pltOvrHm/cldt.rds',   package='MPAC')
+#' ovrmat <- system.file('extdata/pltOvrHm/ovr.rds',package='MPAC') |> readRDS()
+#' cldt   <- system.file('extdata/pltOvrHm/cl.rds', package='MPAC') |> readRDS()
 #'
 #' pltOvrHm(ovrmat, cldt)
 #'
 #' @export
 #'
 pltOvrHm <- function(ovrmat, cldt, min_frc=0.8) {
+    nreps <- nsamps <- icl <- padj <- is_signif <- . <- goname <- frc <- NULL
+
     setnames(cldt, 1, 'nreps')
     srt_cldt <- cldt[order(-nreps)][1, ] |>
         melt(id='nreps', variable='brc', value='icl') |>
@@ -55,6 +57,8 @@ pltOvrHm <- function(ovrmat, cldt, min_frc=0.8) {
 #' @importFrom viridis  cividis
 #'
 makeOvrHm <- function(pltmat, cldt, min_frc) {
+    icl_lab <- icl <- nsamps <- NULL
+
     OVR_CLRS <- colorRamp2(seq(-4, 0, 0.1), rev(cividis(41)))
     FONT_SIZE <- 9
     row_title <- paste0( nrow(pltmat),
