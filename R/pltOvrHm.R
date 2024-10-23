@@ -1,4 +1,4 @@
-#' @title  Plot a heatmap of over-represented gene sets for clsutered samples
+#' @title  Plot a heatmap of over-represented gene sets for clustered samples
 #'
 #' @param  ovrmat   A matrix containing over-representation adjusted P with
 #'                  rows as gene set names and columns as sample IDs. It is the
@@ -28,6 +28,31 @@
 #' @export
 #'
 pltOvrHm <- function(ovrmat, cldt, min_frc=0.8) {
+    outl <- getSignifOvrOnCl(ovrmat, cldt, min_frc)
+
+    makeOvrHm(log10(outl$padjmat), outl$srt_cldt, min_frc)
+}
+
+#' @title  Get significantly over-represented gene sets for clustered samples
+#'
+#' @inheritParams pltOvrHm
+#'
+#' @return  A list of a matrix and a data.table object. The matrix has rows as
+#'          over-represented gene sets, columns as samples, and each cell
+#'          stores an adjusted P for over-representation. The data.table has
+#'          the clustering informations with samples in the same order as the
+#'          matrix's column.
+#'
+#' @examples
+#'
+#' ovrmat <- system.file('extdata/pltOvrHm/ovr.rds',package='MPAC') |> readRDS()
+#' cldt   <- system.file('extdata/pltOvrHm/cl.rds', package='MPAC') |> readRDS()
+#'
+#' getSignifOvrOnCl(ovrmat, cldt)
+#'
+#' @export
+#'
+getSignifOvrOnCl <- function(ovrmat, cldt, min_frc=0.8) {
     nreps <- nsamps <- icl <- padj <- is_signif <- . <- goname <- frc <- NULL
 
     setnames(cldt, 1, 'nreps')
@@ -43,10 +68,7 @@ pltOvrHm <- function(ovrmat, cldt, min_frc=0.8) {
         _[, .(frc = sum(is_signif)/nsamps), by=.(goname, icl)] |>
         _[ frc >= min_frc ]$goname |> unique()
 
-    pltmat <- ovrmat[ gonames, srt_cldt$brc ] |> log10()
-    rownames(pltmat) <- gsub('_', ' ', gonames)
-
-    makeOvrHm(pltmat, srt_cldt, min_frc)
+    list(padjmat = ovrmat[gonames, srt_cldt$brc], srt_cldt = srt_cldt)
 }
 
 #' @import ComplexHeatmap
@@ -65,6 +87,8 @@ makeOvrHm <- function(pltmat, cldt, min_frc) {
         ' gene sets significantly over-represented in >= ', percent(min_frc),
         ' samples in a group') |> str_wrap(width=45)
     cldt[, icl_lab := paste0('c', icl, "\nn=", nsamps)]
+
+    rownames(pltmat) <- gsub('_', ' ', rownames(pltmat))
 
     Heatmap( pltmat,
         col = OVR_CLRS,
