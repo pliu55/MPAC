@@ -35,15 +35,15 @@ conMtf <- function(subntwl, omic_genes=NULL, min_mtf_n_nodes=5) {
     _[, list(n_pats = .N), by=ent] |> _[ n_pats == n_subntws]$ent
 
     conl <- induced_subgraph(subntwl[[1]], con_ents) |>
-        decompose.graph(min.vertices=min_mtf_n_nodes)
+        decompose(min.vertices=min_mtf_n_nodes)
 
     out_conl <- NULL
     if ( is.null(omic_genes) ) {
-        out_conl <- conl 
+        out_conl <- conl
     } else {
         out_conl <- Filter(function(grph) {
             length(intersect(V(grph)$name, omic_genes)) > 0
-        }, conl) 
+        }, conl)
     }
 
     return(out_conl)
