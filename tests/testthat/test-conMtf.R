@@ -7,7 +7,7 @@ main <- function() {
 
 testConMtf <- function() {
     fin = system.file('extdata/conMtf/subntwl.rds', package='MPAC')
-    subntwl = readRDS(fin)
+    subntwl = readRDS(fin) |> lapply(function(s) upgrade_graph(s))
 
     ffocal = system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC')
     omic_gns = readRDS(ffocal) |> rownames()
@@ -15,7 +15,7 @@ testConMtf <- function() {
     outl = conMtf(subntwl, omic_gns, min_mtf_n_nodes=50)
 
     cmpl = system.file('extdata/conMtf/con_grph.rds', package='MPAC') |>
-           readRDS()
+           readRDS() |> lapply(function(s) upgrade_graph(s))
 
     lapply(seq_len(length(outl)), testConMtfByIndi, outl, cmpl)
 }

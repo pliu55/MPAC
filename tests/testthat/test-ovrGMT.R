@@ -8,7 +8,7 @@ testOvrGMT <- function() {
     ffocal = system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC')
     fcmp   = system.file('extdata/ovrGMT/ovr.rds',        package='MPAC')
 
-    subntwl = readRDS(fntw)
+    subntwl = readRDS(fntw) |> lapply(function(s) upgrade_graph(s))
     omic_gns = readRDS(ffocal) |> rownames()
 
     outmat = ovrGMT(subntwl, fgmt, omic_gns)
