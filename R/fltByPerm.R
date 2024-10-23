@@ -3,17 +3,17 @@
 #' @param realdt  A data.table object containing entities and their IPLs from
 #'                real data. It is the output from `colRealIPL()`.
 #'
-#' @param permdt  A data.table object containing permutation index, entities 
-#'                and their IPLs from permuted data. It is the output from 
+#' @param permdt  A data.table object containing permutation index, entities
+#'                and their IPLs from permuted data. It is the output from
 #'                `colPermIPL()`.
 #'
-#' @return A matrix of filtered IPLs with rows as entities and columns as 
+#' @return A matrix of filtered IPLs with rows as entities and columns as
 #'         samples. Entities with IPLs observed by chance are set to NA.
 #'
 #' @export
-#' 
+#'
 #' @examples
-#' 
+#'
 #' freal = system.file('extdata/fltByPerm/real.rds', package='MPAC')
 #' fperm = system.file('extdata/fltByPerm/perm.rds', package='MPAC')
 #' realdt = readRDS(freal)
@@ -43,12 +43,12 @@ fltByPat <- function(pat, in_realdt, in_permdt) {
     perm_median <- perm_mad <- is_real <- med_m_3mad <- med_p_3mad <- NULL
     . <- real_ipl <- flt_real_ipl <- entity <- NULL
 
-    maddt <- data.table( 
+    maddt <- data.table(
         entity      = names(mad_vec),
         perm_median = median_vec,
         perm_mad    = mad_vec ) |>
     merge(realdt, y=_, by='entity', all=TRUE) |>
-    _[, `:=`( 
+    _[, `:=`(
         med_m_3mad = perm_median - 3 * perm_mad,
         med_p_3mad = perm_median + 3 * perm_mad )] |>
     _[, is_real := ifelse( (real_ipl < med_m_3mad) |
