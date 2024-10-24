@@ -1,7 +1,7 @@
 #' @title  Cluster samples by pathway over-representation
 #'
 #' @param  ovrmat  A matrix of gene set over-representation adjusted p-values
-#'                 with rows as gene sets and columns as samples. It is the 
+#'                 with rows as gene sets and columns as samples. It is the
 #'                 output from `ovrGMT()`.
 #'
 #' @param n_neighbors  Number of neighbors for clustering. A larger number is
@@ -10,15 +10,15 @@
 #' @param n_random_runs  Number of random runs. Due to randomness introduced
 #'                       to the Louvain algorithm in R igraph 1.3.0
 #'                       (https://github.com/igraph/rigraph/issues/539), a large
-#'                       number of runs are recommended to evaluate randomness 
-#'                       in the clustering results. Default: 100.
+#'                       number of runs are recommended to evaluate randomness
+#'                       in the clustering results. Default: 200.
 #'
 #' @inheritParams ppRnaInp
 #'
 #' @return  A data table with each row representing one clustering result, and
-#'          the first column denotes the number of occurrences of a clustering 
-#'          result and the rest of columns indicating each sample's cluster 
-#'          index. Rows are ordered by the number of occurrences from high to 
+#'          the first column denotes the number of occurrences of a clustering
+#'          result and the rest of columns indicating each sample's cluster
+#'          index. Rows are ordered by the number of occurrences from high to
 #'          low.
 #'
 #' @examples
@@ -38,14 +38,14 @@
 #' @importFrom S4Vectors DataFrame
 #' @importFrom BiocParallel bplapply
 #'
-clSamp <- function(ovrmat, n_neighbors=10, n_random_runs=100, threads=1) {
+clSamp <- function(ovrmat, n_neighbors=10, n_random_runs=200, threads=1) {
     n_top_hvgs <- 100
 
     ovrmat <- ovrmat[, sort(colnames(ovrmat))]
     ovrmat[is.na(ovrmat)] <- 1.0
     sce <- SingleCellExperiment(
         list(logcounts = abs(log10(ovrmat))),
-        colData = DataFrame(samp=colnames(ovrmat)), 
+        colData = DataFrame(samp=colnames(ovrmat)),
         rowData = DataFrame(goname=rownames(ovrmat))
     )
 
