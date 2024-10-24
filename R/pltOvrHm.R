@@ -93,6 +93,7 @@ makeOvrHm <- function(pltmat, cldt, min_frc) {
     Heatmap( pltmat,
         col = OVR_CLRS,
         na_col = 'black',
+        height = (nrow(pltmat) + 1) * unit(3, 'mm'),
         border            = 'black',
         column_split      = cldt$icl_lab,
         column_title_gp   = gpar(fontsize=FONT_SIZE),
@@ -124,6 +125,6 @@ makeOvrHm <- function(pltmat, cldt, min_frc) {
         heatmap_legend_side = 'bottom',
         column_title    = paste0(ncol(pltmat), ' samples in total'),
         column_title_gp = gpar(fontsize=FONT_SIZE),
-        padding = unit(c(2, 2, 2, 35), 'mm')
+        padding = unit(c(2, 10, 2, 25), 'mm')
     )
 }
