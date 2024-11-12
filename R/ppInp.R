@@ -36,8 +36,9 @@ ppRealInp <- function(cn_tumor_mat, rna_tumor_mat, rna_normal_mat, threads=1) {
 
 #' @title Prepare input copy-number (CN) alteration data to run PARADIGM
 #'
-#' @param cn_tumor_mat  A matrix of tumor CN focal data with rows as genes 
-#'                      and columns as samples 
+#' @param cn_tumor_mat  A matrix of tumor CN focal data with rows as genes
+#'                      and columns as samples. A value of 0 means normal CN,
+#'                      > 0 means amplification, and < 0 means deletion.
 #'
 #' @return  A SummarizedExperiment object of CN state for PARADIGM
 #'
@@ -53,7 +54,7 @@ ppRealInp <- function(cn_tumor_mat, rna_tumor_mat, rna_normal_mat, threads=1) {
 #' @importFrom SummarizedExperiment SummarizedExperiment assays
 #'
 ppCnInp <- function(cn_tumor_mat) {
-    cn_state_mat <- sign(cn_tumor_mat) 
+    cn_state_mat <- sign(cn_tumor_mat)
     SummarizedExperiment(assays=list(CN_state=cn_state_mat))
 }
 
@@ -107,7 +108,7 @@ defState <- function(fitdt, tumor_mat) {
     _[, state := ifelse(val < m_m_2sd, -1, ifelse(val > m_p_2sd, 1, 0))] |>
     dcast(brc ~ gnname, value.var='state') |>
     _[, c('brc', fitdt$gnname), with=FALSE] |>
-    as.matrix(rownames='brc') |> t() 
+    as.matrix(rownames='brc') |> t()
 }
 
 #' @importFrom fitdistrplus mgedist
@@ -131,8 +132,8 @@ fitByGn <- function(gnname, mat) {
 
 #' @title Permute input genomic state data between genes in the same sample
 #'
-#' @param real_se  A SummarizedExperiment object of CN and RNA states from 
-#'                 real samples with rows as genes and columns as samples. 
+#' @param real_se  A SummarizedExperiment object of CN and RNA states from
+#'                 real samples with rows as genes and columns as samples.
 #'                 It is the output from `ppRealInp()`.
 #'
 #' @param n_perms  Number of permutations. Default: 3
@@ -141,12 +142,12 @@ fitByGn <- function(gnname, mat) {
 #'
 #' @usage ppPermInp(real_se, n_perms=3, threads=1)
 #'
-#' @return  A list of SummarizedExperiment objects of permuted CN and RNA 
-#'          states. The metadata `i` in each obbect denotes its permutation 
+#' @return  A list of SummarizedExperiment objects of permuted CN and RNA
+#'          states. The metadata `i` in each obbect denotes its permutation
 #'          index.
 #'
 #' @export
-#' 
+#'
 #' @examples
 #'
 #' freal = system.file('extdata/TcgaInp/inp_real.rds', package='MPAC')
@@ -156,7 +157,7 @@ fitByGn <- function(gnname, mat) {
 #'
 ppPermInp <- function(real_se, n_perms=3, threads=1) {
     ngns <- nrow(real_se)
-    permlist <- lapply(seq_len(n_perms), 
+    permlist <- lapply(seq_len(n_perms),
         function(x) sample(ngns, ngns, replace=FALSE))
 
     getBPPARAM(threads) |>
