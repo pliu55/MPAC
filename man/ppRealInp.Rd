@@ -8,7 +8,8 @@ ppRealInp(cn_tumor_mat, rna_tumor_mat, rna_normal_mat, threads = 1)
 }
 \arguments{
 \item{cn_tumor_mat}{A matrix of tumor CN focal data with rows as genes
-and columns as samples}
+and columns as samples. A value of 0 means normal CN,
+> 0 means amplification, and < 0 means deletion.}
 
 \item{rna_tumor_mat}{A matrix of RNA data from tumor samples with rows as
 genes and columns as samples}

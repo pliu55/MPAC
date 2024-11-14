@@ -8,7 +8,8 @@ ppCnInp(cn_tumor_mat)
 }
 \arguments{
 \item{cn_tumor_mat}{A matrix of tumor CN focal data with rows as genes
-and columns as samples}
+and columns as samples. A value of 0 means normal CN,
+> 0 means amplification, and < 0 means deletion.}
 }
 \value{
 A SummarizedExperiment object of CN state for PARADIGM
