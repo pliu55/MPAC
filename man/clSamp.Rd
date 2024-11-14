@@ -4,7 +4,7 @@
 \alias{clSamp}
 \title{Cluster samples by pathway over-representation}
 \usage{
-clSamp(ovrmat, n_neighbors = 10, n_random_runs = 100, threads = 1)
+clSamp(ovrmat, n_neighbors = 10, n_random_runs = 200, threads = 1)
 }
 \arguments{
 \item{ovrmat}{A matrix of gene set over-representation adjusted p-values
@@ -18,7 +18,7 @@ recommended if the size of samples is large. Default: 10.}
 to the Louvain algorithm in R igraph 1.3.0
 (https://github.com/igraph/rigraph/issues/539), a large
 number of runs are recommended to evaluate randomness
-in the clustering results. Default: 100.}
+in the clustering results. Default: 200.}
 
 \item{threads}{Number of threads to run in parallel. Default: 1}
 }
