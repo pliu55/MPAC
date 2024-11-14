@@ -116,7 +116,7 @@ defState <- function(fitdt, tumor_mat) {
 fitByGn <- function(gnname, mat) {
     vec <- mat[gnname, ]
     outl <- list(gnname = gnname)
-    scaling_dummy <- 10 ## for fitting on very small numbers
+    scaling_dummy <- 100 ## for fitting on very small numbers
     if ( all(vec == vec[1]) ) {
         outl$norm_mean <- vec[1]
         outl$norm_sd   <- 0
