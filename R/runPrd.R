@@ -148,9 +148,10 @@ runPARADIGM <- function(fcfg, fcpt, fipl, out_prefix, fpth, PARADIGM_bin,
     ferr <- paste0(out_prefix, 'run.err')
 
     if ( is.null(PARADIGM_bin) ) {
-        paste0("Please provide PARADIGM binary. See vignette for details\n")
+        paste0("Please provide PARADIGM binary. See vignette for details\n") |>
+        cat()
     } else if ( ! file.exists(PARADIGM_bin) ) {
-        paste0('PARADIGM binary not found:', PARADIGM_bin, "\n") |> stop()
+        paste0('PARADIGM binary not found:', PARADIGM_bin, "\n") |> cat()
     } else {
         ## cat(PARADIGM_bin, args, "\n")
         if ( is.null(nohup_bin) ) {
