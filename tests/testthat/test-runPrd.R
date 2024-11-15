@@ -13,7 +13,7 @@ testRunPermPrd <- function() {
     permll = readRDS(fpermll)
     pat = 'TCGA-CV-7100'
     outdir = tempdir()
-    
+
     runPermPrd(permll, fpth, outdir, PARADIGM_bin=NULL, sampleids=c(pat))
 
     lapply(permll, testRunPermPrdByIPerm, pat, outdir)
@@ -21,8 +21,8 @@ testRunPermPrd <- function() {
 
 testRunPermPrdByIPerm <- function(perm_se, pat, outdir) {
     iperm = S4Vectors::metadata(perm_se)$i
-    out_prefix = paste0(outdir, '/p', iperm, '/', pat, '_')
-    cmp_relpre = paste0('extdata/runPrd/p', iperm, '/', pat, '_')
+    out_prefix = paste0(outdir, '/p', iperm, '/', pat, '_', iperm, '_')
+    cmp_relpre = paste0('extdata/runPrd/p', iperm, '/', pat, '_', iperm, '_')
     testRunPrdByPrefix('testRunPermPrd', out_prefix, cmp_relpre)
 }
 

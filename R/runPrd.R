@@ -18,6 +18,8 @@
 #'                   all the samples that exist in both copy-number alteration
 #'                   and RNA files will be ran. Default: NULL
 #'
+#' @param file_tag  A string of output file name tag. Default: NULL
+#'
 #' @inheritParams ppRnaInp
 #'
 #' @usage runPrd(real_se, fpth, outdir, PARADIGM_bin=NULL, nohup_bin=NULL,
@@ -43,7 +45,7 @@
 #' @importFrom SummarizedExperiment assays
 #'
 runPrd <- function(real_se, fpth, outdir, PARADIGM_bin=NULL,
-    nohup_bin=NULL, sampleids=NULL, threads=1) {
+    nohup_bin=NULL, sampleids=NULL, file_tag=NULL, threads=1) {
 
     prots <- rownames(real_se) |> sort()
     cn_state_mat  <- assays(real_se)$CN_state  |>
@@ -56,7 +58,7 @@ runPrd <- function(real_se, fpth, outdir, PARADIGM_bin=NULL,
 
     pats <- rownames(cn_state_mat)
     dummy <- bplapply(pats, runPrdByPat, cn_state_mat, rna_state_mat, fpth,
-        outdir, PARADIGM_bin, nohup_bin, BPPARAM=getBPPARAM(threads))
+        outdir, PARADIGM_bin, nohup_bin, file_tag, BPPARAM=getBPPARAM(threads))
 }
 
 #' @title  Run PARADIGM on permuted data
@@ -95,15 +97,20 @@ runPermPrd <- function(perml, fpth, outdir, PARADIGM_bin=NULL, nohup_bin=NULL,
         iperm_tag <- paste0('p', metadata(perm_se)$i)
         iperm_outdir <- paste0(outdir, '/', iperm_tag, '/')
         runPrd(perm_se, fpth, iperm_outdir, PARADIGM_bin, nohup_bin, sampleids,
-            threads)
+            threads, file_tag=metadata(perm_se)$i)
     })
 }
 
 runPrdByPat <- function(pat, cnmat, rnamat, fpth, outdir, PARADIGM_bin,
-    nohup_bin) {
+    nohup_bin, file_tag=NULL) {
 
     fone_samp <- tag <- NULL
-    out_prefix <- paste0(outdir, '/', pat, '_')
+    if ( is.null(file_tag) ) {
+        file_tag <- pat
+    } else {
+        file_tag <- paste0(pat, '_', file_tag)
+    }
+    out_prefix <- paste0(outdir, '/', file_tag, '_')
     omicdt <- data.table( rbind(
         c( 'genome', 'inp_focal'       ),
         c( 'mRNA',   'inp_log10fpkmP1' )

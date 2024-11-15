@@ -1,0 +1,6 @@
+pathway [max_in_degree=5]
+inference [method=BP,updates=SEQFIX,tol=1e-9,maxiter=10000,logdomain=0]
+em_step [TCGA-CV-7100_3_inp_focal.tsv=-obs>,TCGA-CV-7100_3_inp_log10fpkmP1.tsv=-obs>]
+em [max_iters=10000,log_z_tol=1e-10]
+evidence [suffix=TCGA-CV-7100_3_inp_focal.tsv,node=genome,disc=-0.5;0.5,epsilon=0.001,epsilon0=0.2]
+evidence [suffix=TCGA-CV-7100_3_inp_log10fpkmP1.tsv,node=mRNA,disc=-0.5;0.5,epsilon=0.001,epsilon0=0.2]

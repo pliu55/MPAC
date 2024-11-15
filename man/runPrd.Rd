@@ -26,6 +26,8 @@ Default: NULL}
 all the samples that exist in both copy-number alteration
 and RNA files will be ran. Default: NULL}
 
+\item{file_tag}{A string of output file name tag. Default: NULL}
+
 \item{threads}{Number of threads to run in parallel. Default: 1}
 }
 \value{
