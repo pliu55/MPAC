@@ -136,7 +136,7 @@ fitByGn <- function(gnname, mat) {
 #'                 real samples with rows as genes and columns as samples.
 #'                 It is the output from `ppRealInp()`.
 #'
-#' @param n_perms  Number of permutations. Default: 3
+#' @param n_perms  Number of permutations. Default: 100
 #'
 #' @inheritParams ppRnaInp
 #'
@@ -155,7 +155,7 @@ fitByGn <- function(gnname, mat) {
 #'
 #' ppPermInp(real_se, n_perms=3)
 #'
-ppPermInp <- function(real_se, n_perms=3, threads=1) {
+ppPermInp <- function(real_se, n_perms=100, threads=1) {
     ngns <- nrow(real_se)
     permlist <- lapply(seq_len(n_perms),
         function(x) sample(ngns, ngns, replace=FALSE))
