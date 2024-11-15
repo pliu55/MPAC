@@ -21,7 +21,8 @@
 #'
 #' @importFrom SummarizedExperiment assays assays<-
 #'
-ppRealInp <- function(cn_tumor_mat, rna_tumor_mat, rna_normal_mat, threads=1) {
+ppRealInp <- function(cn_tumor_mat, rna_tumor_mat, rna_normal_mat, rna_n_sd=2,
+    threads=1) {
     cn_se <- ppCnInp(cn_tumor_mat)
     rna_se <- ppRnaInp(rna_tumor_mat, rna_normal_mat, threads=threads)
 
@@ -67,6 +68,9 @@ ppCnInp <- function(cn_tumor_mat) {
 #' @param rna_normal_mat  A matrix of RNA data from normal samples with rows
 #'                        as genes and columns as samples
 #'
+#' @param rna_n_sd  Standard deviation range from fitted normal samples to
+#'                  define RNA state. Default: 2, i.e. 2*sd
+#'
 #' @param threads  Number of threads to run in parallel. Default: 1
 #'
 #' @return A SummarizedExperiment of RNA state for PARADIGM
@@ -85,27 +89,27 @@ ppCnInp <- function(cn_tumor_mat) {
 #' @importFrom SummarizedExperiment SummarizedExperiment assays
 #' @importFrom BiocParallel  SnowParam bplapply
 #'
-ppRnaInp <- function(rna_tumor_mat, rna_normal_mat, threads=1) {
+ppRnaInp <- function(rna_tumor_mat, rna_normal_mat, rna_n_sd=2, threads=1) {
     out_mat <- getBPPARAM(threads) |>
         bplapply(rownames(rna_normal_mat), fitByGn, rna_normal_mat, BPPARAM=_)|>
         rbindlist() |>
-        defState(rna_tumor_mat)
+        defState(rna_tumor_mat, rna_n_sd)
 
     SummarizedExperiment(assays=list(RNA_state=out_mat))
 }
 
 #' @import data.table
 #'
-defState <- function(fitdt, tumor_mat) {
-    norm_mean <- norm_sd <- m_m_2sd <- m_p_2sd <- val <- state <- NULL
+defState <- function(fitdt, tumor_mat, rna_n_sd=2) {
+    norm_mean <- norm_sd <- m_m_nsd <- m_p_nsd <- val <- state <- NULL
     fitdt[, `:=`(
-        m_m_2sd = norm_mean - 2 * norm_sd,
-        m_p_2sd = norm_mean + 2 * norm_sd)]
+        m_m_nsd = norm_mean - rna_n_sd * norm_sd,
+        m_p_nsd = norm_mean + rna_n_sd * norm_sd)]
 
     t(tumor_mat) |> as.data.table(keep.rownames='brc') |>
     melt(id='brc', variable='gnname', value='val') |>
     merge(fitdt, by='gnname', all.x=TRUE) |>
-    _[, state := ifelse(val < m_m_2sd, -1, ifelse(val > m_p_2sd, 1, 0))] |>
+    _[, state := ifelse(val < m_m_nsd, -1, ifelse(val > m_p_nsd, 1, 0))] |>
     dcast(brc ~ gnname, value.var='state') |>
     _[, c('brc', fitdt$gnname), with=FALSE] |>
     as.matrix(rownames='brc') |> t()
@@ -140,7 +144,7 @@ fitByGn <- function(gnname, mat) {
 #'
 #' @inheritParams ppRnaInp
 #'
-#' @usage ppPermInp(real_se, n_perms=3, threads=1)
+#' @usage ppPermInp(real_se, n_perms=100, threads=1)
 #'
 #' @return  A list of SummarizedExperiment objects of permuted CN and RNA
 #'          states. The metadata `i` in each obbect denotes its permutation

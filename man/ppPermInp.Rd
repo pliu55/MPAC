@@ -4,14 +4,14 @@
 \alias{ppPermInp}
 \title{Permute input genomic state data between genes in the same sample}
 \usage{
-ppPermInp(real_se, n_perms=3, threads=1)
+ppPermInp(real_se, n_perms=100, threads=1)
 }
 \arguments{
 \item{real_se}{A SummarizedExperiment object of CN and RNA states from
 real samples with rows as genes and columns as samples.
 It is the output from \code{ppRealInp()}.}
 
-\item{n_perms}{Number of permutations. Default: 3}
+\item{n_perms}{Number of permutations. Default: 100}
 
 \item{threads}{Number of threads to run in parallel. Default: 1}
 }

@@ -4,7 +4,7 @@
 \alias{ppRnaInp}
 \title{Prepare input RNA data to run PARADIGM}
 \usage{
-ppRnaInp(rna_tumor_mat, rna_normal_mat, threads = 1)
+ppRnaInp(rna_tumor_mat, rna_normal_mat, rna_n_sd = 2, threads = 1)
 }
 \arguments{
 \item{rna_tumor_mat}{A matrix of RNA data from tumor samples with rows as
@@ -12,6 +12,9 @@ genes and columns as samples}
 
 \item{rna_normal_mat}{A matrix of RNA data from normal samples with rows
 as genes and columns as samples}
+
+\item{rna_n_sd}{Standard deviation range from fitted normal samples to
+define RNA state. Default: 2, i.e. 2*sd}
 
 \item{threads}{Number of threads to run in parallel. Default: 1}
 }
