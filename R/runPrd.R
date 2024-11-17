@@ -23,7 +23,7 @@
 #' @inheritParams ppRnaInp
 #'
 #' @usage runPrd(real_se, fpth, outdir, PARADIGM_bin=NULL, nohup_bin=NULL,
-#'     sampleids=NULL, threads=1)
+#'     sampleids=NULL, file_tag=NULL, threads=1)
 #'
 #' @return None
 #'
@@ -104,6 +104,32 @@ runPermPrd <- function(perml, fpth, outdir, PARADIGM_bin=NULL, nohup_bin=NULL,
 runPrdByPat <- function(pat, cnmat, rnamat, fpth, outdir, PARADIGM_bin,
     nohup_bin, file_tag=NULL) {
 
+    outl <- ppRunPrd(pat, cnmat, rnamat, outdir, file_tag)
+    fcfg <- outl$fcfg
+    fcpt <- outl$fcpt
+    fipl <- outl$fipl
+    out_prefix <- outl$out_prefix
+
+    runPARADIGM(fcfg, fcpt, fipl, out_prefix, fpth, PARADIGM_bin, nohup_bin)
+}
+
+#' @title  Prepare required files to run PARADIGM
+#'
+#' @param pat  Sample ID
+#'
+#' @param cnmat  CN matrix
+#'
+#' @param rnamat  RNA matrix
+#'
+#' @inheritParams runPrd
+#'
+#' @usage ppRunPrd(pat, cnmat, rnamat, outdir, file_tag=NULL)
+#'
+#' @return None
+#'
+#' @export
+#'
+ppRunPrd <- function(pat, cnmat, rnamat, outdir, file_tag=NULL) {
     fone_samp <- tag <- NULL
     if ( is.null(file_tag) ) {
         file_tag <- pat
@@ -130,7 +156,7 @@ runPrdByPat <- function(pat, cnmat, rnamat, fpth, outdir, PARADIGM_bin,
 
     prepConfig(fcfg, omicdt)
 
-    runPARADIGM(fcfg, fcpt, fipl, out_prefix, fpth, PARADIGM_bin, nohup_bin)
+    list(fcfg=fcfg, fcpt=fcpt, fipl=fipl, out_prefix=out_prefix)
 }
 
 prepOmic <- function(type, fone_samp, type2mat) {

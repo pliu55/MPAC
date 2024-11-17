@@ -5,7 +5,7 @@
 \title{Run PARADIGM on multi-omic data}
 \usage{
 runPrd(real_se, fpth, outdir, PARADIGM_bin=NULL, nohup_bin=NULL,
-    sampleids=NULL, threads=1)
+    sampleids=NULL, file_tag=NULL, threads=1)
 }
 \arguments{
 \item{real_se}{A SummarizedExperiment object of PARADIGM CNA and RNA states.

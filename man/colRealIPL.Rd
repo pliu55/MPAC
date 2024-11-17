@@ -5,7 +5,7 @@
 \title{Collect Inferred Pathway Levels (IPLs) from PARADIGM runs on real
 data}
 \usage{
-colRealIPL(indir, sampleids = NULL)
+colRealIPL(indir, sampleids = NULL, file_tag = NULL)
 }
 \arguments{
 \item{indir}{Input folder that saves PARADIGM results. It should be set as
@@ -14,6 +14,8 @@ the same as \code{outdir} as in \code{runPrd()}.}
 \item{sampleids}{Sample IDs for which IPLs to be collected. If not provided,
 all files with suffix '_ipl.txt' in \code{indir} will be
 collected. Default: NULL.}
+
+\item{file_tag}{A string of output file name tag. Default: NULL}
 }
 \value{
 A data.table object with columns of pathway entities and their IPLs.
