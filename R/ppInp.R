@@ -24,7 +24,8 @@
 ppRealInp <- function(cn_tumor_mat, rna_tumor_mat, rna_normal_mat, rna_n_sd=2,
     threads=1) {
     cn_se <- ppCnInp(cn_tumor_mat)
-    rna_se <- ppRnaInp(rna_tumor_mat, rna_normal_mat, threads=threads)
+    rna_se <- ppRnaInp(rna_tumor_mat, rna_normal_mat, rna_n_sd=rna_n_sd,
+        threads=threads)
 
     out_rownames <- intersect(rownames(cn_se), rownames(rna_se))
     out_colnames <- intersect(colnames(cn_se), colnames(rna_se))
