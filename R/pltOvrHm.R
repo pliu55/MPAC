@@ -89,6 +89,7 @@ makeOvrHm <- function(pltmat, cldt, min_frc) {
     cldt[, icl_lab := paste0('c', icl, "\nn=", nsamps)]
 
     rownames(pltmat) <- gsub('_', ' ', rownames(pltmat))
+    pltmat <- pltmat[, as.character(cldt$brc)]
 
     Heatmap( pltmat,
         col = OVR_CLRS,
