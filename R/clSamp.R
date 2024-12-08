@@ -11,7 +11,9 @@
 #'                       to the Louvain algorithm in R igraph 1.3.0
 #'                       (https://github.com/igraph/rigraph/issues/539), a large
 #'                       number of runs are recommended to evaluate randomness
-#'                       in the clustering results. Default: 200.
+#'                       in the clustering results. Default: 200, which shall be
+#'                       safe for sample size < 50. Please increase it
+#'                       accordingly for a larger sample size.
 #'
 #' @inheritParams ppRnaInp
 #'
