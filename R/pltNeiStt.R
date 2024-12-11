@@ -26,8 +26,10 @@
 #' @export
 #'
 pltNeiStt <- function(real_se, fltmat, fpth, protein) {
-    cn_state_mat  <- assays(real_se)$CN_state
-    rna_state_mat <- assays(real_se)$RNA_state
+    cn_state_mat  <- assays(real_se)$CN_state[ protein, , drop=FALSE]
+    rna_state_mat <- assays(real_se)$RNA_state[protein, , drop=FALSE]
+
+    fltmat[is.na(fltmat)] <- 0
 
     nodedt <- ppNode4PltNeiStt(fpth, protein)
     pltmat <- ppMat4PltNeiStt(cn_state_mat, rna_state_mat, fltmat, nodedt)
@@ -69,6 +71,7 @@ makeHmNeiStt <- function(pltmat, nodedt) {
         column_names_gp    = gpar(fontsize=7),
         column_names_side  = 'top',
         column_names_rot   = 30,
+        height             = unit(0.4 * (nrow(pltmat)+1), 'cm'),
         width              = unit(0.45 * ncol(pltmat), 'cm'),
         use_raster         = FALSE,
         heatmap_legend_param = list(
@@ -124,7 +127,7 @@ ppNode4PltNeiStt <- function(fpth, gnname) {
 
 orderNodes <- function(nodedt, up_ents, dn_ents, gnname) {
     id <- label <- level <- loc <- NULL
-    nodedt[, id := factor(id, 
+    nodedt[, id := factor(id,
         levels=unique(c(up_ents, dn_ents, 'CNA', gnname, 'RNA-seq')))] |>
     _[, label := gsub('_', ' ', id)] |>
     _[, level := ifelse(id %in% up_ents, 1, ifelse(id %in% dn_ents, 3, 2))] |>
