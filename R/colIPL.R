@@ -31,6 +31,8 @@ colRealIPL <- function(indir, sampleids=NULL, file_tag=NULL) {
 #'
 #' @param  n_perms  Number of permutations to collect.
 #'
+#' @param threads  Number of threads to run in parallel. Default: 1
+#'
 #' @return  A data.table object with columns of permutation index, pathway
 #'          entities and their IPLs.
 #'
@@ -43,13 +45,16 @@ colRealIPL <- function(indir, sampleids=NULL, file_tag=NULL) {
 #'
 #' colPermIPL(indir, n_perms)
 #'
-colPermIPL <- function(indir, n_perms, sampleids=NULL) {
-    lapply(seq_len(n_perms), function(iperm) {
+#' @importFrom BiocParallel  SnowParam bplapply
+#'
+colPermIPL <- function(indir, n_perms, sampleids=NULL, threads=1) {
+    bp <- getBPPARAM(threads)
+    bplapply(seq_len(n_perms), function(iperm) {
         ipldt <- paste0(indir, '/p', iperm, '/') |> colIPL(sampleids, iperm)
         brcs <- names(ipldt) |> setdiff('entity')
         ipldt[, iperm := iperm] |>
         _[, c('entity', 'iperm', brcs), with=FALSE]
-    }) |> rbindlist()
+    }, BPPARAM=bp) |> rbindlist()
 }
 
 colIPL <- function(indir, sampleids, file_tag=NULL) {
