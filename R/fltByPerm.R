@@ -7,6 +7,8 @@
 #'                and their IPLs from permuted data. It is the output from
 #'                `colPermIPL()`.
 #'
+#' @param threads  Number of threads to run in parallel. Default: 1
+#'
 #' @return A matrix of filtered IPLs with rows as entities and columns as
 #'         samples. Entities with IPLs observed by chance are set to NA.
 #'
@@ -21,10 +23,13 @@
 #'
 #' fltByPerm(realdt, permdt)
 #'
-fltByPerm <- function(realdt, permdt) {
+#' @importFrom BiocParallel  SnowParam bplapply
+#'
+fltByPerm <- function(realdt, permdt, threads=1) {
     pats <- intersect(names(realdt), names(permdt)) |> setdiff('entity')
 
-    lapply(pats, fltByPat, realdt, permdt) |> rbindlist() |>
+    bp <- getBPPARAM(threads)
+    bplapply(pats, fltByPat, realdt, permdt, BPPARAM=bp) |> rbindlist() |>
     dcast(entity ~ pat, value.var='flt_real_ipl') |>
     as.matrix(rownames='entity')
 }

@@ -4,7 +4,7 @@
 \alias{fltByPerm}
 \title{Filter IPLs from real data by distribution from permuted data}
 \usage{
-fltByPerm(realdt, permdt)
+fltByPerm(realdt, permdt, threads = 1)
 }
 \arguments{
 \item{realdt}{A data.table object containing entities and their IPLs from
@@ -13,6 +13,8 @@ real data. It is the output from \code{colRealIPL()}.}
 \item{permdt}{A data.table object containing permutation index, entities
 and their IPLs from permuted data. It is the output from
 \code{colPermIPL()}.}
+
+\item{threads}{Number of threads to run in parallel. Default: 1}
 }
 \value{
 A matrix of filtered IPLs with rows as entities and columns as
