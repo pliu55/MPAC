@@ -1,11 +1,21 @@
 #' @title  Plot a heatmap of pathway and omic states of a protein and its
 #'         pathway neighbors
 #'
+#' @param  real_se  A SummarizedExperiment object of PARADIGM CNA and RNA
+#'                  states. It is the output fromm `ppRealInp()` and must
+#'                  contain the omic states for the one defined in the
+#'                  `protein` argument.
+#'
+#' @param  fltmat  A matrix contains filterd IPL with rows as entity and
+#'                 column as samples. This is the output from `fltByPerm()`.
+#'                 Entity with NA value will be set to 0 and plotted as in
+#'                 'normal' state.
+#'
+#' @param  fpth  Name of a pathway file for PARADIGM.
+#'
 #' @param  protein  Name of the protein to plot. It requires to have CN and RNA
 #'                  state data, as well as pathway data from the input.
-#'
-#' @inheritParams runPrd
-#' @inheritParams subNtw
+#'                  Default: ''
 #'
 #' @return  A heatmap of pathway and omic states of a protein and its
 #'          pathway neighbors
@@ -25,7 +35,11 @@
 #'
 #' @export
 #'
-pltNeiStt <- function(real_se, fltmat, fpth, protein) {
+pltNeiStt <- function(real_se, fltmat, fpth, protein='') {
+    if ( ! (protein %in% rownames(real_se) ) ) {
+        paste0(protein, " is not in the input `real_se`\n") |> stop()
+    }
+    real_se <- real_se[ protein, ]
     cn_state_mat  <- assays(real_se)$CN_state[ protein, , drop=FALSE]
     rna_state_mat <- assays(real_se)$RNA_state[protein, , drop=FALSE]
 

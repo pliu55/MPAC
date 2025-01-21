@@ -5,20 +5,24 @@
 \title{Plot a heatmap of pathway and omic states of a protein and its
 pathway neighbors}
 \usage{
-pltNeiStt(real_se, fltmat, fpth, protein)
+pltNeiStt(real_se, fltmat, fpth, protein = "")
 }
 \arguments{
-\item{real_se}{A SummarizedExperiment object of PARADIGM CNA and RNA states.
-It is the same matrix as the output from \code{ppRealInp()}.}
+\item{real_se}{A SummarizedExperiment object of PARADIGM CNA and RNA
+states. It is the output fromm \code{ppRealInp()} and must
+contain the omic states for the one defined in the
+\code{protein} argument.}
 
-\item{fltmat}{A matrix contains filterd IPL with rows
-as 'entity' and column as samples. This is the output from
-\code{fltByPerm()}. Entity with NA in all columns will be ignored.}
+\item{fltmat}{A matrix contains filterd IPL with rows as entity and
+column as samples. This is the output from \code{fltByPerm()}.
+Entity with NA value will be set to 0 and plotted as in
+'normal' state.}
 
 \item{fpth}{Name of a pathway file for PARADIGM.}
 
 \item{protein}{Name of the protein to plot. It requires to have CN and RNA
-state data, as well as pathway data from the input.}
+state data, as well as pathway data from the input.
+Default: ''}
 }
 \value{
 A heatmap of pathway and omic states of a protein and its
