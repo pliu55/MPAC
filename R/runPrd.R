@@ -47,6 +47,10 @@
 runPrd <- function(real_se, fpth, outdir, PARADIGM_bin=NULL,
     nohup_bin=NULL, sampleids=NULL, file_tag=NULL, threads=1) {
 
+    if ( is.null(sampleids) ) {
+        sampleids <- colnames(real_se)
+    }
+
     prots <- rownames(real_se) |> sort()
     cn_state_mat  <- assays(real_se)$CN_state  |>
         _[prots, sampleids, drop=FALSE] |> t()
@@ -96,6 +100,9 @@ runPermPrd <- function(perml, fpth, outdir, PARADIGM_bin=NULL, nohup_bin=NULL,
     dummy <- lapply(perml, function(perm_se) {
         iperm_tag <- paste0('p', metadata(perm_se)$i)
         iperm_outdir <- paste0(outdir, '/', iperm_tag, '/')
+        if ( is.null(sampleids) ) {
+            sampleids <- colnames(perm_se)
+        }
         runPrd(perm_se, fpth, iperm_outdir, PARADIGM_bin, nohup_bin, sampleids,
             threads, file_tag=metadata(perm_se)$i)
     })
