@@ -13,7 +13,7 @@ It is the same matrix as the output from \code{ppRealInp()}.}
 
 \item{fltmat}{A matrix contains filterd IPL with rows
 as 'entity' and column as samples. This is the output from
-\code{fltByPerm()}.}
+\code{fltByPerm()}. Entity with NA in all columns will be ignored.}
 
 \item{fpth}{Name of a pathway file for PARADIGM.}
 

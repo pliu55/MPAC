@@ -2,11 +2,11 @@
 #'
 #' @param fltmat  A matrix contains filterd IPL with rows
 #'                as 'entity' and column as samples. This is the output from
-#'                `fltByPerm()`.
+#'                `fltByPerm()`. Entity with NA in all columns will be ignored.
 #'
 #' @param fgmt  A gene set GMT file. This will be the same file used for the
 #'              gene set over-representation calculation in the next step. It
-#'              is used here to ensure output sub-pathway contains a minimum 
+#'              is used here to ensure output sub-pathway contains a minimum
 #'              number of genes from to-be-used gene sets.
 #'
 #' @param min_n_gmt_gns  Minimum number of genes from the GMT file in the output
@@ -29,10 +29,12 @@
 #'
 #' subNtw(fltmat, fpth, fgmt, min_n_gmt_gns=1)
 #'
-#' 
+#'
 #' @importFrom fgsea gmtPathways
 #'
 subNtw <- function(fltmat, fpth, fgmt, min_n_gmt_gns=2, threads=1) {
+    is_all_na <- apply(fltmat, 1, function(x) all(is.na(x)))
+    fltmat <- fltmat[ ! is_all_na, ]
     pthl <- getNodeEdge(fpth)
     nodedt <- pthl$nodedt
     edgedt <- pthl$edgedt
@@ -40,7 +42,7 @@ subNtw <- function(fltmat, fpth, fgmt, min_n_gmt_gns=2, threads=1) {
     gmt_gns <- gmtPathways(fgmt) |> do.call(c, args=_) |> unique()
     sampleids <- colnames(fltmat)
 
-    outl <- getBPPARAM(threads) |> 
+    outl <- getBPPARAM(threads) |>
         bplapply(sampleids, getSubNtwByPat, nodedt, edgedt, fltmat, gmt_gns,
         min_n_gmt_gns, BPPARAM=_)
 
@@ -50,7 +52,7 @@ subNtw <- function(fltmat, fpth, fgmt, min_n_gmt_gns=2, threads=1) {
 
 #' @import igraph
 #'
-getSubNtwByPat <- function(pat, in_nodedt, in_edgedt, fltmat, gmt_gns, 
+getSubNtwByPat <- function(pat, in_nodedt, in_edgedt, fltmat, gmt_gns,
     min_n_gmt_gns) {
 
     nents <- from <- to <- entity <- isub <- NULL
@@ -71,7 +73,7 @@ getSubNtwByPat <- function(pat, in_nodedt, in_edgedt, fltmat, gmt_gns,
             return(n_gmt_gns >= min_n_gmt_gns)
         }, x=_)
 
-    ndt <- length(subl) |> seq_len() |> lapply(function(isub) 
+    ndt <- length(subl) |> seq_len() |> lapply(function(isub)
         list(isub=isub, nents=length(V(subl[[isub]])$name))) |> rbindlist()
 
     subntw <- subl[[ ndt[ nents == max(nents)]$isub ]]
