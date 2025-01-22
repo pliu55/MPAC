@@ -1,3 +1,26 @@
+# MPAC 1.1.1
+
+- added new functions
+  - `pltOvrHm()`: to plot a heatmap of over-represented gene sets for clustered
+    samples
+  - `ppRunPrd()`: to prepare required files to run PARADIGM
+- updated existing functions
+  - `conMtf()`: use `decompose()` instead of `decompose.graph()` for igraph 2.0
+  - `ppPermInp()`: increased default permutations from 3 to 100
+  - `ppRealInp()` and `ppRnaInp()`: added an option `rna_n_sd` to set standard
+    deviation range to define RNA state
+  - `pltNeiStt()`: fixed bugs and adjusted output figure height
+  - `colPermIPL()` & `fltByPerm()`: added a `threads` option to parallelize
+  - `runPrd()` & `runPermPrd()`: when no `sampleids` is provided, all the  
+    samples in input `real_se` and `perml` will be used.
+  - `subNtw()`: entities with NA values in all samples in the input `fltmat` 
+    will be ignored.
+- updated tests
+  - `test-conMtf()` & `test-subNtw()`: use `as_edgelist()` instead of
+    `get.edgelist()` for igraph 2.0
+  - `test-conMtf()` & `test-ovrGMT()`: add `upgrade_graph()` on extdata
+
+
 # MPAC 0.99.10
 
 Added documentation in inst/scripts/ for the source and derivation of 
