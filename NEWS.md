@@ -1,5 +1,12 @@
 # MPAC 1.1.3
 
+- Vignettes
+  - added examples on `pltOvrHm()`
+  - added pseudocode for MPAC
+  - changed MPAC's full name
+
+# MPAC 1.1.2
+
 - pltOvrHm(): use lowercase 'p' instead of 'P' in heatmap colorbar legend
 - MPAC's full name is changed to 'Multi-omic Pathway Analysis of Cell'
 
