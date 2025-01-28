@@ -114,7 +114,7 @@ makeOvrHm <- function(pltmat, cldt, min_frc) {
             TRUE, FALSE),
         raster_quality    = 5,
         heatmap_legend_param = list(
-            title       = expression(paste('log'[10], '(adjusted P)')),
+            title       = expression(paste('log'[10], '(adjusted p)')),
             title_gp    = gpar(fontsize=FONT_SIZE),
             labels_gp   = gpar(fontsize=FONT_SIZE),
             legend_width = unit(0.8, 'inch'),
