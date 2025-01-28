@@ -37,8 +37,54 @@ pathway network, MPAC computes Inferred Pathway Levels (IPLs) for pathway
 entities, clusters patient samples by their enriched GO terms, and identifies
 key pathway proteins for each patient cluster.
 
+## Workflow
+
 ```{r WorkflowJPG, fig.cap='MPAC workflow', out.width='800px', echo=FALSE}
 knitr::include_graphics('workflow.jpg')
+```
+
+## Pseudocode
+
+```{r pseudocode, eval=FALSE}
+FOR each sample:
+    ## Step 1
+    prepare CNA States from real data
+
+    prepare RNA States from real data
+
+    ## Step 2
+    compute IPLs by PARADIGM using CNA and RNA states from real data as well as
+    the input pathway definition
+
+    ## Step 3
+    REPEAT 100 times:
+        randomly permute CNA and RNA states between genes
+
+        compute IPLs by PARADIGM using CNA and RNA states from permuted data as
+        well as the input pathway definition
+
+    ## Step 4
+    FOR each pathway entity:
+        filter entity IPL from real data by its 100 IPLs from permuted data
+
+    ## Step 5
+    based on the input pathway definition, select the largest sub-pathway with 
+    all of its entities with non-zero IPLs
+
+    ## Step 6
+    FOR each GO term in GMT file collections:
+        do enrichment analysis using genes from the largest sub-pathway
+
+    RETURN GO enrichment results
+
+cluster samples by their GO enrichment results
+
+## Step 7 & 8
+pick a sample group of interest
+
+find submodules shared by the largest sub-pathways of all samples in this group
+
+identify key pathway proteins from submodules
 ```
 
 # Installation
