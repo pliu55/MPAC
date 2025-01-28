@@ -412,6 +412,28 @@ conMtf(subntwl, omic_gns, min_mtf_n_nodes=50)
 
 # Diagnostic plot
 
+## Clustered samples by their altered pathways
+
+MPAC provides a function to plot a heatmap of samples clustered by their 
+significantly over-represented GO terms
+
+```{r pltOvrHm}
+#| fig.dim = c(8, 3.5),
+#| fig.cap = "A heatmap of samples clustered by their altered pathways"
+
+# GO term adjusted p-values, which are the output of `ovrGMT()`
+ovrmat <- system.file('extdata/pltOvrHm/ovr.rds',package='MPAC') |> readRDS()
+
+# clustering information of samples, which is the output of `clSamp()`
+cldt   <- system.file('extdata/pltOvrHm/cl.rds', package='MPAC') |> readRDS()
+
+# to plot a heatmap on GO terms significantly over-represented in >= 80% of
+# samples in a group
+pltOvrHm(ovrmat, cldt, min_frc=0.8)
+```
+
+## Display omic and pathway states of a protein and its neighbors
+
 MPAC implemented a diagnostic function to plot a heatmap of the omic and 
 pathway states of a protein as well as the pathway states of this protein's 
 pathway neighbors. This heatmap facilitates the identification of pathway 
@@ -436,7 +458,7 @@ real_se <- system.file('extdata/pltNeiStt/inp_real.rds', package='MPAC') |>
 fltmat <- system.file('extdata/pltNeiStt/fltmat.rds', package='MPAC') |> 
             readRDS()
 
-# to plot heatmap
+# to plot a heatmap
 pltNeiStt(real_se, fltmat, fpth, protein)
 ```
 
