@@ -1,5 +1,5 @@
 ---
-title: 'MPAC: Multi-omic Pathway Analysis of Cancer'
+title: 'MPAC: Multi-omic Pathway Analysis of Cell'
 author: 'Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, and Anthony Gitter'
 date: '`r Sys.Date()`'
 output:
@@ -11,7 +11,7 @@ output:
 urlcolor: blue
 linkcolor: blue
 vignette: >
-    %\VignetteIndexEntry{MPAC: Multi-omic Pathway Analysis of Cancer}
+    %\VignetteIndexEntry{MPAC: Multi-omic Pathway Analysis of Cell}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---
