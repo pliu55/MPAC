@@ -1,3 +1,11 @@
+# MPAC 1.1.5
+
+- use 'Multi-omic Pathway Analysis of Cells' for MPAC
+
+# MPAC 1.1.4
+
+- updated text in DESCRIPTION
+
 # MPAC 1.1.3
 
 - Vignettes

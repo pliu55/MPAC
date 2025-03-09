@@ -20,7 +20,7 @@ Table of Contents
 
 ## <a name='introduction'></a> Introduction
 
-Multi-omic Pathway Analysis of Cell (__MPAC__) is an __R__ package that 
+Multi-omic Pathway Analysis of Cells (__MPAC__) is an __R__ package that 
 interprets multi-omic data through the prior knowledge of biological pathways.
 The workflow of MPAC contains several steps, which are shown in 
 the figure below.  MPAC has a

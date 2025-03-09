@@ -1,5 +1,5 @@
 Package: MPAC
-Title: Multi-omic Pathway Analysis of Cell
+Title: Multi-omic Pathway Analysis of Cells
 Version: 1.1.4
 Authors@R: c(
     person(given="Peng", family="Liu", 
@@ -8,7 +8,7 @@ Authors@R: c(
     person(given="Paul",    family="Ahlquist", role = c("aut")),
     person(given="Irene",   family="Ong",      role = c("aut")),
     person(given="Anthony", family="Gitter",   role = c("aut")))
-Description: Multi-omic Pathway Analysis of Cell (MPAC), integrates 
+Description: Multi-omic Pathway Analysis of Cells (MPAC), integrates 
     multi-omic data for understanding cellular mechanisms. It  
     predicts novel patient groups with distinct pathway profiles 
     as well as identifying key pathway proteins with potential clinical 
