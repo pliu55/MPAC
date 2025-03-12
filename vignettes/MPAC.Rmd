@@ -65,7 +65,7 @@ FOR each sample:
 
     ## Step 4
     FOR each pathway entity:
-        filter entity's IPL from real data by its 100 IPLs from permuted data
+        filter entity’s IPL from real data by its 100 IPLs from permuted data
 
     ## Step 5
     based on the input pathway definition, select the largest sub-pathway with 
@@ -143,7 +143,11 @@ require(MPAC)
     subset
 - `clSamp()`: cluster samples by their gene set over-representation results
 - `conMtf()`: find consensus pathway motifs within a cluster
+- `pltSttKM()`: plot a Kaplan-Meier curve to find correlation between 
+              protein(s)' pathway states and patient survival
 - `pltNeiStt()`: plot a heatmap to identify a protein's pathway determinants
+- `pltOvrHm()`: plot a heatmap to identify over-represented GO terms for each 
+              sample groups
 
 
 
@@ -477,6 +481,30 @@ cldt   <- system.file('extdata/pltOvrHm/cl.rds', package='MPAC') |> readRDS()
 # to plot a heatmap on GO terms significantly over-represented in >= 80% of
 # samples in a group
 pltOvrHm(ovrmat, cldt, min_frc=0.8)
+```
+
+## Correlation between protein(s) pathway states and patient survival
+
+MPAC provides a function to plot Kaplan-Meier curve on patient samples 
+stratified by pathway states of one or multiple proteins.
+
+```{r pltSttKM}
+#| fig.dim = c(3.5, 3.5),
+#| fig.cap = "Kaplan-Meier curve of patient samples stratified by whether 
+#|            IPLs of CD247 and FASLG are both > 0."
+
+# A matrix containing patient survival information
+cdrmat <- system.file('extdata/pltSttKM/cdr.rds', package='MPAC') |> readRDS()
+
+# A matrix of filtered IPL, which is the output of `fltByPerm()`
+fltmat <- system.file('extdata/pltSttKM/ipl.rds', package='MPAC') |> readRDS()
+
+# To plot Kaplan-Meier curve using overall survival (OS) event and days from 
+# `cdrmat` and pathway states of CD247 and FASLG from `fltmat`. Samples are 
+# stratified by whether having both CD247 and FASLG in activated states, i.e., 
+# IPL>0 for both proteins.
+pltSttKM(cdrmat, fltmat, event='OS', time='OS_days', 
+         proteins=c('CD247', 'FASLG'), strat_func='>0') |> print()
 ```
 
 ## Display omic and pathway states of a protein and its neighbors
