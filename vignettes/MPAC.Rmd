@@ -142,7 +142,9 @@ require(MPAC)
 - `ovrGMT()`: do gene set over-representation on a sample's largest pathway
     subset
 - `clSamp()`: cluster samples by their gene set over-representation results
-- `conMtf()`: find consensus pathway motifs within a cluster
+- `conMtf()`: find consensus pathway submoduless within a cluster
+- `pltMtfPrtIPL()`: plot a heatmap of IPLs for proteins from consensus pathway
+                  submodule(s)
 - `pltSttKM()`: plot a Kaplan-Meier curve to find correlation between 
               protein(s)' pathway states and patient survival
 - `pltNeiStt()`: plot a heatmap to identify a protein's pathway determinants
@@ -481,6 +483,34 @@ cldt   <- system.file('extdata/pltOvrHm/cl.rds', package='MPAC') |> readRDS()
 # to plot a heatmap on GO terms significantly over-represented in >= 80% of
 # samples in a group
 pltOvrHm(ovrmat, cldt, min_frc=0.8)
+```
+
+## Heatmap of IPLs on proteins from consensus pathway submodule(s)
+
+MPAC provides a function to plot heatmap of IPLs on proteins from consensus
+pathway submodules. This help to identify proteins with consistent activated,
+normal, or repressed pathway states in a cluster of samples.
+
+
+```{r pltMtfPrtIPL}
+#| fig.dim = c(7, 3.5),
+#| fig.cap = "Heatmap of IPLs on proteins from consensus pathway submodules."
+
+# A matrix of filtered IPL, which is the output of `fltByPerm()`
+fltmat <- system.file('extdata/pltSttKM/ipl.rds', package='MPAC') |> readRDS()
+
+# A data.table of sample clustering results. It is the output of `clSamp()`
+cldt <- system.file('extdata/pltMtfPrtIPL/cl.rds',package='MPAC')|> readRDS()
+
+# A list of consensus pathway submodules. It is the output of `conMtf()`
+grphl <- system.file('extdata/pltMtfPrtIPL/grphl.rds',package='MPAC') |>
+         readRDS()
+
+# Proteins to plot
+proteins=c('CD28', 'CD86', 'LCP2', 'IL12RB1', 'TYK2', 'CD247', 'FASLG', 'CD3G')
+
+# To plot a heatmap of IPLs on specified proteins
+pltMtfPrtIPL(fltmat, cldt, grphl, proteins)
 ```
 
 ## Correlation between protein(s) pathway states and patient survival
