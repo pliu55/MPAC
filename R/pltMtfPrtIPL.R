@@ -9,7 +9,7 @@
 #' @inheritParams pltNeiStt
 #' @inheritParams pltOvrHm
 #'
-#' @return  A Kaplan-Meier plot
+#' @return  A heatmap of IPLs o proteins from consensus pathway submodules
 #'
 #' @examples
 #'

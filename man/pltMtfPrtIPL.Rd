@@ -26,7 +26,7 @@ submodules. It is the output from \code{conMtf()}.}
 proteins that in both \code{grphl} and \code{fltmat}.}
 }
 \value{
-A Kaplan-Meier plot
+A heatmap of IPLs o proteins from consensus pathway submodules
 }
 \description{
 Plot a heatmap of IPLs on proteins from consensus pathway submodules
