@@ -143,6 +143,7 @@ require(MPAC)
     subset
 - `clSamp()`: cluster samples by their gene set over-representation results
 - `conMtf()`: find consensus pathway submoduless within a cluster
+- `pltConMtf()`: plot consensus pathway submodules
 - `pltMtfPrtIPL()`: plot a heatmap of IPLs for proteins from consensus pathway
                   submodule(s)
 - `pltSttKM()`: plot a Kaplan-Meier curve to find correlation between 
@@ -463,7 +464,7 @@ omic_gns <- system.file('extdata/TcgaInp/inp_focal.rds', package='MPAC') |>
 conMtf(subntwl, omic_gns, min_mtf_n_nodes=50)
 ```
 
-# Diagnostic plot
+# Diagnostic plots
 
 ## Clustered samples by their altered pathways
 
@@ -484,6 +485,29 @@ cldt   <- system.file('extdata/pltOvrHm/cl.rds', package='MPAC') |> readRDS()
 # samples in a group
 pltOvrHm(ovrmat, cldt, min_frc=0.8)
 ```
+
+## Visualize consensus pathway submodules with proteins highlighted
+
+MPAC provides a function to visualize consensus pathway submodules and highlight
+the proteins user-supplied.
+
+
+```{r pltConMtf}
+#| fig.dim = c(7, 5),
+#| fig.cap = "Consensus pathway submodules."
+
+# A list of consensus pathway submodules. It is the output of `conMtf()`
+grphl <- system.file('extdata/pltMtfPrtIPL/grphl.rds',package='MPAC') |>
+         readRDS()
+
+# Proteins to highlight. Not required--no node in the graph will be highlighted
+proteins <- c('CD28', 'CD86', 'LCP2', 'IL12RB1', 'TYK2', 'CD247', 'FASLG', 
+              'CD3G')
+
+# To plot consensus pathway submodules
+pltConMtf(grphl, proteins)
+```
+
 
 ## Heatmap of IPLs on proteins from consensus pathway submodule(s)
 
@@ -534,7 +558,7 @@ fltmat <- system.file('extdata/pltSttKM/ipl.rds', package='MPAC') |> readRDS()
 # stratified by whether having both CD247 and FASLG in activated states, i.e., 
 # IPL>0 for both proteins.
 pltSttKM(cdrmat, fltmat, event='OS', time='OS_days', 
-         proteins=c('CD247', 'FASLG'), strat_func='>0') |> print()
+         proteins=c('CD247', 'FASLG'), strat_func='>0')
 ```
 
 ## Display omic and pathway states of a protein and its neighbors

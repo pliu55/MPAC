@@ -43,6 +43,7 @@ Imports:
     stringr (>= 1.5.1),
     viridis (>= 0.6.5),
     ggplot2 (>= 3.5.1),
+    ggraph (>= 2.2.1),
     survival (>= 3.7),
     survminer (>= 0.4.9),
     grid,
