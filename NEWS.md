@@ -1,3 +1,13 @@
+# MPAC 1.1.6
+
+- updated pseudocode in vignettes
+- added new functions
+  - `pltConMtf()`: to plot consensus pathway submodules
+  - `pltMtfPrtIPL()`: to plot a heatmap of IPLs on proteins from consensus
+    pathway submodules
+  - `pltSttKM()`: to plot Kaplan-Meier curve for patient samples stratified
+    by given protein(s)' pathway states
+
 # MPAC 1.1.5
 
 - use 'Multi-omic Pathway Analysis of Cells' for MPAC
