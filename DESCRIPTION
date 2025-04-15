@@ -1,6 +1,6 @@
 Package: MPAC
 Title: Multi-omic Pathway Analysis of Cells
-Version: 1.1.6
+Version: 1.2.0
 Authors@R: c(
     person(given="Peng", family="Liu", 
            email="pliu55.wisc+bioconductor@gmail.com", 
