@@ -6,8 +6,8 @@ citEntry(
                          as.person("Paul Ahlquist"),
                          as.person("Irene M. Ong"),
                          as.person("Anthony Gitter") ),
-    year    = 2024,
-    journal = "bioRxiv",
-    doi     = "10.1101/2024.06.15.599113",
-    textVersion = "MPAC: a computational framework for inferring cancer pathway activities from multi-omic data. Peng Liu, David Page, Paul Ahlquist, Irene M. Ong, Anthony Gitter. bioRxiv, 2024.06.15.599113. doi: https://doi.org/10.1101/2024.06.15.599113"
+    year    = 2025,
+    journal = "Bioinformatics",
+    doi     = "10.1093/bioinformatics/btaf490",
+    textVersion = "MPAC: a computational framework for inferring pathway activities from multi-omic data. Peng Liu, David Page, Paul Ahlquist, Irene M Ong*, Anthony Gitter*. Bioinformatics, Volume 41, Issue 10, October 2025, btaf490, https://doi.org/10.1093/bioinformatics/btaf490, *co-corresponding author"
 )

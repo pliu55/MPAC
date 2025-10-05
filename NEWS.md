@@ -1,3 +1,7 @@
+# MPAC 1.3.1
+
+- updated citation to point to the journal Bioinformatics 
+
 # MPAC 1.1.6
 
 - updated pseudocode in vignettes
